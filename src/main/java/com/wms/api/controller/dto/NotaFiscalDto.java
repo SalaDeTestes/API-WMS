@@ -1,5 +1,6 @@
 package com.wms.api.controller.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import com.wms.api.models.Motorista;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.PlacaTransportadora;
 import com.wms.api.models.StatusNF;
+import com.wms.api.models.TipoCaminhao;
 import com.wms.api.models.TipoNotaEntrada;
 import com.wms.api.models.Transportadora;
 import com.wms.api.models.Usuario;
@@ -21,7 +23,7 @@ public class NotaFiscalDto {
 	private StatusNF idStatusNF;
 	private String numeroNota;
 	private String numeroSerie;
-	private LocalDateTime dataEmissao;
+	private LocalDate dataEmissao;
 	private LocalDateTime dataLancamento;
 	private String observacao;
 	private String chaveNfe;
@@ -35,6 +37,7 @@ public class NotaFiscalDto {
 	private TipoNotaEntrada idTipoEntrada;
 	private Motorista idMotorista;
 	private Boolean entradaValidada;
+	private TipoCaminhao idTipoCaminhao;
 
 	public NotaFiscalDto(NotaFiscal nf) {
 		this.id = nf.getId();
@@ -57,6 +60,7 @@ public class NotaFiscalDto {
 		this.idTipoEntrada = nf.getIdTipoEntrada();
 		this.idMotorista = nf.getIdMotorista();
 		this.entradaValidada = nf.getEntradaValidada();
+		this.idTipoCaminhao = nf.getIdTipoCaminhao();
 	}
 
 	public Long getId() {
@@ -83,7 +87,7 @@ public class NotaFiscalDto {
 		return numeroSerie;
 	}
 
-	public LocalDateTime getDataEmissao() {
+	public LocalDate getDataEmissao() {
 		return dataEmissao;
 	}
 
@@ -137,6 +141,10 @@ public class NotaFiscalDto {
 
 	public Boolean getEntradaValidada() {
 		return entradaValidada;
+	}
+
+	public TipoCaminhao getIdTipoCaminhao() {
+		return idTipoCaminhao;
 	}
 
 	public static List<NotaFiscalDto> converter(List<NotaFiscal> nf) {

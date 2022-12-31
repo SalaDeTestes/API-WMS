@@ -1,5 +1,6 @@
 package com.wms.api.models;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -26,15 +27,19 @@ public class NotaFiscal {
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_Transportadora")
 	private Transportadora idTransportadora;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_Motorista")
 	private Motorista idMotorista;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_TipoNF")
 	private TipoNotaEntrada idTipoEntrada;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "fk_Id_TipoCaminhao")
+	private TipoCaminhao idTipoCaminhao;
+
 	@Column(name = "fg_EntValidada")
 	private Boolean entradaValidada;
 
@@ -61,10 +66,10 @@ public class NotaFiscal {
 	private String numeroSerie;
 
 	@Column(name = "Dt_EmissaoDocumento")
-	private LocalDateTime dataEmissao;
+	private LocalDate dataEmissao;
 
 	@Column(name = "Dt_Lancamento")
-	private LocalDateTime dataLancamento;
+	private LocalDateTime dataLancamento = LocalDateTime.now();
 
 	@Column(name = "Ds_Observacao")
 	private String observacao;
@@ -83,7 +88,7 @@ public class NotaFiscal {
 
 	@Column(name = "Nr_Carga")
 	private String numeroCarga;
-	
+
 	@Column(name = "Ds_PlacaTransporte")
 	private String descricaoPlaca;
 
@@ -92,9 +97,10 @@ public class NotaFiscal {
 	}
 
 	public NotaFiscal(Transportadora idTransportadora, Usuario idUsuario, StatusNF idStatusNF, String numeroNota,
-			String numeroSerie, LocalDateTime dataEmissao, LocalDateTime dataLancamento, String observacao,
-			String chaveNfe, Cliente idCliente, PlacaTransportadora idPlaca, Float pesoLiquido, Float pesoBruto,
-			LocalDateTime dataCancelamento, String numeroCarga, String descricaoPlaca, TipoNotaEntrada idTipoEntrada, Motorista idMotorista, Boolean entradaValidada) {
+			String numeroSerie, LocalDate dataEmissao, LocalDateTime dataLancamento, String observacao, String chaveNfe,
+			Cliente idCliente, PlacaTransportadora idPlaca, Float pesoLiquido, Float pesoBruto,
+			LocalDateTime dataCancelamento, String numeroCarga, String descricaoPlaca, TipoNotaEntrada idTipoEntrada,
+			Motorista idMotorista, Boolean entradaValidada, TipoCaminhao idTipoCaminhao) {
 		this.idTransportadora = idTransportadora;
 		this.idUsuario = idUsuario;
 		this.idStatusNF = idStatusNF;
@@ -114,6 +120,7 @@ public class NotaFiscal {
 		this.idTipoEntrada = idTipoEntrada;
 		this.idMotorista = idMotorista;
 		this.entradaValidada = entradaValidada;
+		this.idTipoCaminhao = idTipoCaminhao;
 
 	}
 
@@ -165,11 +172,11 @@ public class NotaFiscal {
 		this.numeroSerie = numeroSerie;
 	}
 
-	public LocalDateTime getDataEmissao() {
+	public LocalDate getDataEmissao() {
 		return dataEmissao;
 	}
 
-	public void setDataEmissao(LocalDateTime dataEmissao) {
+	public void setDataEmissao(LocalDate dataEmissao) {
 		this.dataEmissao = dataEmissao;
 	}
 
@@ -276,7 +283,13 @@ public class NotaFiscal {
 	public void setEntradaValidada(Boolean entradaValidada) {
 		this.entradaValidada = entradaValidada;
 	}
-	
-	
+
+	public TipoCaminhao getIdTipoCaminhao() {
+		return idTipoCaminhao;
+	}
+
+	public void setIdTipoCaminhao(TipoCaminhao idTipoCaminhao) {
+		this.idTipoCaminhao = idTipoCaminhao;
+	}
 
 }

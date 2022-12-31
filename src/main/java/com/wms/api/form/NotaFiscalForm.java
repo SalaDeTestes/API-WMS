@@ -1,5 +1,6 @@
 package com.wms.api.form;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.wms.api.models.NotaFiscal;
@@ -8,6 +9,7 @@ import com.wms.api.repository.MotoristaRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.PlacaTransportadoraRepository;
 import com.wms.api.repository.StatusNFRepository;
+import com.wms.api.repository.TipoCaminhaoRepository;
 import com.wms.api.repository.TipoNotaEntradaRepository;
 import com.wms.api.repository.TransportadoraRepository;
 import com.wms.api.repository.UsuarioRepository;
@@ -19,7 +21,7 @@ public class NotaFiscalForm {
 	private Long idStatusNF;
 	private String numeroNota;
 	private String numeroSerie;
-	private LocalDateTime dataEmissao;
+	private LocalDate dataEmissao;
 	private LocalDateTime dataLancamento;
 	private String observacao;
 	private String chaveNfe;
@@ -33,6 +35,7 @@ public class NotaFiscalForm {
 	private Long idTipoEntrada;
 	private Long idMotorista;
 	private Boolean entradaValidada;
+	private Long idTipoCaminhao;
 
 	public Integer getIdTransportadora() {
 		return idTransportadora;
@@ -74,11 +77,11 @@ public class NotaFiscalForm {
 		this.numeroSerie = numeroSerie;
 	}
 
-	public LocalDateTime getDataEmissao() {
+	public LocalDate getDataEmissao() {
 		return dataEmissao;
 	}
 
-	public void setDataEmissao(LocalDateTime dataEmissao) {
+	public void setDataEmissao(LocalDate dataEmissao) {
 		this.dataEmissao = dataEmissao;
 	}
 
@@ -185,11 +188,19 @@ public class NotaFiscalForm {
 	public void setEntradaValidada(Boolean entradaValidada) {
 		this.entradaValidada = entradaValidada;
 	}
+	
+	public Long getIdTipoCaminhao() {
+		return idTipoCaminhao;
+	}
+
+	public void setIdTipoCaminhao(Long idTipoCaminhao) {
+		this.idTipoCaminhao = idTipoCaminhao;
+	}
 
 	public NotaFiscal formulario(TransportadoraRepository transportadoraRepository, UsuarioRepository usuarioRepository,
 			StatusNFRepository statusRepository, ClienteRepository clienteRepository,
 			PlacaTransportadoraRepository placaRepository, MotoristaRepository motoristaRepository,
-			TipoNotaEntradaRepository tipoRepository) {
+			TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = new NotaFiscal();
 
@@ -200,18 +211,17 @@ public class NotaFiscalForm {
 		nf.setNumeroNota(numeroNota);
 		nf.setNumeroSerie(numeroSerie);
 		nf.setDataEmissao(dataEmissao);
-		nf.setDataLancamento(dataLancamento);
 		nf.setObservacao(observacao);
 		nf.setChaveNfe(chaveNfe);
-		nf.setDataCancelamento(dataCancelamento);
 		nf.setNumeroCarga(numeroCarga);
 		nf.setPesoBruto(pesoBruto);
 		nf.setPesoLiquido(pesoLiquido);
 		nf.setIdPlaca(placaRepository.getReferenceById(idPlaca));
 		nf.setDescricaoPlaca(placaRepository.getReferenceById(idPlaca).getDescricao());
 		nf.setIdMotorista(motoristaRepository.getReferenceById(idMotorista));
-		nf.setIdTipoEntrada(tipoRepository.getReferenceById((long) 2));
+		nf.setIdTipoEntrada(tipoRepository.getReferenceById(idTipoEntrada));
 		nf.setEntradaValidada(false);
+		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
 
 		return nf;
 	}
@@ -219,7 +229,7 @@ public class NotaFiscalForm {
 	public NotaFiscal atualizar(Long id, TransportadoraRepository transportadoraRepository,
 			UsuarioRepository usuarioRepository, StatusNFRepository statusRepository, NotaFiscalRepository nfRepository,
 			ClienteRepository clienteRepository, PlacaTransportadoraRepository placaRepository,
-			MotoristaRepository motoristaRepository, TipoNotaEntradaRepository tipoRepository) {
+			MotoristaRepository motoristaRepository, TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
 
@@ -230,7 +240,6 @@ public class NotaFiscalForm {
 		nf.setNumeroNota(numeroNota);
 		nf.setNumeroSerie(numeroSerie);
 		nf.setDataEmissao(dataEmissao);
-		nf.setDataLancamento(dataLancamento);
 		nf.setObservacao(observacao);
 		nf.setChaveNfe(chaveNfe);
 		nf.setDataCancelamento(dataCancelamento);
@@ -240,8 +249,9 @@ public class NotaFiscalForm {
 		nf.setIdPlaca(placaRepository.getReferenceById(idPlaca));
 		nf.setDescricaoPlaca(placaRepository.getReferenceById(idPlaca).getDescricao());
 		nf.setIdMotorista(motoristaRepository.getReferenceById(idMotorista));
-		nf.setIdTipoEntrada(tipoRepository.getReferenceById((long) 2));
+		nf.setIdTipoEntrada(tipoRepository.getReferenceById(idTipoEntrada));
 		nf.setEntradaValidada(false);
+		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
 
 		return nf;
 	}
