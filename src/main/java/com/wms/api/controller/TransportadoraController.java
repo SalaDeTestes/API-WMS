@@ -91,7 +91,7 @@ public class TransportadoraController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	public ResponseEntity<?> remover(@PathVariable Long id) {
+	public ResponseEntity<?> remover(@PathVariable Integer id) {
 		Optional<Transportadora> optional = transportadoraRepository.findById(id);
 		if (optional.isPresent()) {
 
