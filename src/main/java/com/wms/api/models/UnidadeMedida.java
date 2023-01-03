@@ -18,17 +18,17 @@ public class UnidadeMedida {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pk_Id_Unidade")
 	private Integer id;
-	
+
 	@Column(name = "Sg_Unidade")
 	private String simbolo;
-	
+
 	@Column(name = "Ds_Unidade")
 	private String descricao;
-	
+
 	public UnidadeMedida() {
-		
+
 	}
-	
+
 	public UnidadeMedida(String simbolo, String descricao) {
 		this.simbolo = simbolo;
 		this.descricao = descricao;
@@ -57,7 +57,5 @@ public class UnidadeMedida {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
-	
+
 }

@@ -15,8 +15,8 @@ public class ProdutoDto {
 	private Usuario idUsuario;
 	private UnidadeMedida idUnidadeMedida;
 	private CategoriaGalpao idCategoriaGalpao;
-	private String codFabricante;
-	private String codProduto;
+	private String codigoFabricante;
+	private String codigoProduto;
 	private String descricao;
 	private String nome;
 	private String ean;
@@ -60,12 +60,12 @@ public class ProdutoDto {
 		return idCategoriaGalpao;
 	}
 
-	public String getCodFabricante() {
-		return codFabricante;
+	public String getCodigoFabricante() {
+		return codigoFabricante;
 	}
 
-	public String getCodProduto() {
-		return codProduto;
+	public String getCodigoProduto() {
+		return codigoProduto;
 	}
 
 	public String getDescricao() {
@@ -178,8 +178,8 @@ public class ProdutoDto {
 		this.idUsuario = produto.getIdUsuario();
 		this.idUnidadeMedida = produto.getIdUnidadeMedida();
 		this.idCategoriaGalpao = produto.getIdCategoriaGalpao();
-		this.codProduto = produto.getCodProduto();
-		this.codFabricante = produto.getCodFabricante();
+		this.codigoProduto = produto.getCodigoProduto();
+		this.codigoFabricante = produto.getCodigoFabricante();
 		this.descricao = produto.getDescricao();
 		this.nome = produto.getNome();
 		this.ean = produto.getEan();

@@ -188,7 +188,7 @@ public class NotaFiscalForm {
 	public void setEntradaValidada(Boolean entradaValidada) {
 		this.entradaValidada = entradaValidada;
 	}
-	
+
 	public Long getIdTipoCaminhao() {
 		return idTipoCaminhao;
 	}
@@ -229,7 +229,8 @@ public class NotaFiscalForm {
 	public NotaFiscal atualizar(Long id, TransportadoraRepository transportadoraRepository,
 			UsuarioRepository usuarioRepository, StatusNFRepository statusRepository, NotaFiscalRepository nfRepository,
 			ClienteRepository clienteRepository, PlacaTransportadoraRepository placaRepository,
-			MotoristaRepository motoristaRepository, TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository) {
+			MotoristaRepository motoristaRepository, TipoNotaEntradaRepository tipoRepository,
+			TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
 

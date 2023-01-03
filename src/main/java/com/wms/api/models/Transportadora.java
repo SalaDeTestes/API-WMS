@@ -11,42 +11,44 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tbTransportadora")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Transportadora {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pk_Id_Transportadora")
 	private Integer id;
-	
+
 	@Column(name = "Ds_RazaoSocial")
 	private String razaoSocial;
-	
+
 	@Column(name = "Nr_CNPJ")
 	private String cnpj;
-	
+
 	@Column(name = "Nr_CPF")
 	private String cpf;
-	
+
 	@Column(name = "Nr_CEP")
 	private String cep;
-	
+
 	@Column(name = "Ds_Cidade")
 	private String cidade;
-	
+
 	@Column(name = "Ds_Telefone")
 	private String telefone;
-	
+
 	@Column(name = "Ds_Email")
 	private String email;
-	
+
 	@Column(name = "Ds_Responsavel1")
 	private String responsavel;
-	
+
 	public Transportadora() {
-		
+
 	}
-	
-	public Transportadora(String razaoSocial, String cnpj, String cpf, String cep, String cidade, String telefone, String email, String responsavel) {
+
+	public Transportadora(String razaoSocial, String cnpj, String cpf, String cep, String cidade, String telefone,
+			String email, String responsavel) {
 		this.razaoSocial = razaoSocial;
 		this.cnpj = cnpj;
 		this.cpf = cpf;
@@ -55,7 +57,7 @@ public class Transportadora {
 		this.telefone = telefone;
 		this.email = email;
 		this.responsavel = responsavel;
-		
+
 	}
 
 	public Integer getId() {
@@ -129,7 +131,5 @@ public class Transportadora {
 	public void setResponsavel(String responsavel) {
 		this.responsavel = responsavel;
 	}
-	
-	
-		
+
 }

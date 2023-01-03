@@ -12,65 +12,68 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "\"tbCliente\"")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "tbCliente")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Cliente {
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pk_Id_Cliente")
 	private Long id;
-	
+
 	@Column(name = "Ds_RazaoSocial")
 	private String descricaoRazaoSocial;
-	
+
 	@Column(name = "Nr_CNPJ")
 	private String cnpj;
-	
+
 	@Column(name = "Nr_InscricaoEstadual")
 	private String inscricaoEstadual;
-	
+
 	@Column(name = "Ds_Endereco")
 	private String descricaoEndereco;
-	
+
 	@Column(name = "Nr_Endereco")
 	private String numeroEndereco;
-	
+
 	@Column(name = "Nr_CEP")
 	private String cep;
-	
+
 	@Column(name = "Ds_Telefone")
 	private String telefone;
-	
+
 	@Column(name = "Ds_Email")
 	private String email;
-	
+
 	@Column(name = "Ds_Responsavel1")
 	private String responsavel;
-	
+
 	@Column(name = "Ds_Cargo1")
 	private String cargoResponsavel;
-	
+
 	@Column(name = "Ds_NomeFantasia")
 	private String nomeFantasia;
-	
+
 	@Column(name = "Dt_Cadastro")
 	private LocalDateTime dataCadastro;
-	
+
 	@Column(name = "Dt_Atualizacao")
 	private LocalDateTime dataAtualizacao;
-	
+
 	@Column(name = "Fg_AtivoInativo")
 	private Boolean situacao;
-		   
-		  
+
 	public Cliente() {
-		
+
 	}
-	
-	public Cliente(String descricaoRazaoSocial, String cnpj, String inscricaoEstadual, String descricaoEndereco, String numeroEndereco, String cep, String telefone, String email, String responsavel, String cargoResponsavel, String nomeFantasia, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, Boolean situacao) {
+
+	public Cliente(String descricaoRazaoSocial, String cnpj, String inscricaoEstadual, String descricaoEndereco,
+			String numeroEndereco, String cep, String telefone, String email, String responsavel,
+			String cargoResponsavel, String nomeFantasia, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao,
+			Boolean situacao) {
 		this.descricaoRazaoSocial = descricaoRazaoSocial;
 		this.cnpj = cnpj;
-		this.inscricaoEstadual =inscricaoEstadual;
+		this.inscricaoEstadual = inscricaoEstadual;
 		this.descricaoEndereco = descricaoEndereco;
 		this.numeroEndereco = numeroEndereco;
 		this.cep = cep;
@@ -203,8 +206,5 @@ public class Cliente {
 	public void setSituacao(Boolean situacao) {
 		this.situacao = situacao;
 	}
-	
-	
-		      
-		     
+
 }

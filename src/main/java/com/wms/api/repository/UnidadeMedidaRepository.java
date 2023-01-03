@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wms.api.models.UnidadeMedida;
 
-public interface UnidadeMedidaRepository extends JpaRepository<UnidadeMedida, Long> {
+public interface UnidadeMedidaRepository extends JpaRepository<UnidadeMedida, Integer> {
 
 }

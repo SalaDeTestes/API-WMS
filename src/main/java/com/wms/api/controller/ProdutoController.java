@@ -33,31 +33,28 @@ public class ProdutoController {
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	CategoriaGalpaoRepository categoriaGalpaoRepository;
-	
+
 	@Autowired
 	UnidadeMedidaRepository medidaRepository;
-	
+
 	@Autowired
 	ProdutoRepository produtoRepository;
-	
-	
-	
+
 	@GetMapping
 	@Transactional
-	public List<ProdutoDto> listar()	{
+	public List<ProdutoDto> listar() {
 		List<Produto> produto = produtoRepository.findAll();
 		return ProdutoDto.converter(produto);
 	}
-	
-	
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
 		Produto produto = form.formulario(usuarioRepository, medidaRepository, categoriaGalpaoRepository);
-		
+
 		produtoRepository.save(produto);
 
 		URI uri = uriBuilder.path("/produto/{id}").buildAndExpand(produto.getId()).toUri();
@@ -65,7 +62,7 @@ public class ProdutoController {
 		return ResponseEntity.created(uri).body(new ProdutoDto(produto));
 
 	}
-	
+
 	@GetMapping("/{id}")
 	@Transactional
 	public ResponseEntity<ProdutoDto> detalhar(@PathVariable Long id) {
@@ -82,7 +79,8 @@ public class ProdutoController {
 	public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
 		Optional<Produto> optional = produtoRepository.findById(id);
 		if (optional.isPresent()) {
-			Produto produto = form.atualizar(id, produtoRepository, usuarioRepository, medidaRepository, categoriaGalpaoRepository);
+			Produto produto = form.atualizar(id, produtoRepository, usuarioRepository, medidaRepository,
+					categoriaGalpaoRepository);
 			return ResponseEntity.ok(new ProdutoDto(produto));
 		}
 

@@ -24,29 +24,25 @@ import com.wms.api.form.ClienteForm;
 import com.wms.api.models.Cliente;
 import com.wms.api.repository.ClienteRepository;
 
-
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
 
 	@Autowired
 	ClienteRepository clienteRepository;
-	
-	
-	
+
 	@GetMapping
 	@Transactional
-	public List<ClienteDto> listar()	{
+	public List<ClienteDto> listar() {
 		List<Cliente> cliente = clienteRepository.findAll();
 		return ClienteDto.converter(cliente);
 	}
-	
-	
+
 	@PostMapping
 	@Transactional
 	public ResponseEntity<ClienteDto> cadastrar(@RequestBody @Valid ClienteForm form, UriComponentsBuilder uriBuilder) {
 		Cliente cliente = form.formulario();
-		
+
 		clienteRepository.save(cliente);
 
 		URI uri = uriBuilder.path("/cliente/{id}").buildAndExpand(cliente.getId()).toUri();
@@ -54,7 +50,7 @@ public class ClienteController {
 		return ResponseEntity.created(uri).body(new ClienteDto(cliente));
 
 	}
-	
+
 	@GetMapping("/{id}")
 	@Transactional
 	public ResponseEntity<ClienteDto> detalhar(@PathVariable Long id) {

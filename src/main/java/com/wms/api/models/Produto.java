@@ -22,116 +22,123 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pk_Id_Mercadoria")
 	private Long id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_Usuario")
 	private Usuario idUsuario;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_UnidadeTrabalhada")
 	private UnidadeMedida idUnidadeMedida;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_Id_CategGalpao")
 	private CategoriaGalpao idCategoriaGalpao;
-	
+
 	@Column(name = "Ds_CodigoFabricante")
-	private String codFabricante;
-	
+	private String codigoFabricante;
+
 	@Column(name = "Ds_CodigoMercadoria")
-	private String codProduto;
-	
+	private String codigoProduto;
+
 	@Column(name = "Ds_Mercadoria")
 	private String descricao;
-	
+
 	@Column(name = "Ds_Apelido")
 	private String nome;
-	
+
 	@Column(name = "Nr_EAN")
 	private String ean;
-	
+
 	@Column(name = "Nr_DUM")
 	private String dum;
-	
+
 	@Column(name = "Qt_DiasVidaUtil")
 	private Integer vidaUtil;
-	
+
 	@Column(name = "Qt_UnidadePorPallet")
 	private Float unidadePorPallet;
-	
+
 	@Column(name = "Qt_Embalagem")
-	private Integer quantidadeProdutoCaixa; 
-	
+	private Integer quantidadeProdutoCaixa;
+
 	@Column(name = "Pc_ConversaoMt2")
 	private Float metroQuadrado;
-	
+
 	@Column(name = "Dt_Cadastro")
 	private LocalDateTime dataCadastro = LocalDateTime.now();
-	
+
 	@Column(name = "Dt_Atualizacao")
 	private LocalDateTime dataAtualizacao;
-	
+
 	@Column(name = "Pc_ConversaoPesoLiquido")
 	private Float pesoLiquido;
-	
+
 	@Column(name = "Pc_ConversaoPesoBruto")
 	private Float pesoBruto;
-	
+
 	@Column(name = "Pc_ConversaoPesoEmbalagem")
 	private Float pesoEmbalagem;
-	//inicio norma de palletização
+	// inicio norma de palletização
 	@Column(name = "nr_mercadoriaLastro")
 	private Integer lastroNormaPallet;
-	
+
 	@Column(name = "nr_mercadoriaAltura")
 	private Integer alturaNormaPallet;
-	
+
 	@Column(name = "Nr_Camada")
 	private Float camadaNormaPallet;
-	//fim norma de palletização
+	// fim norma de palletização
 	@Column(name = "nr_Altura")
 	private Float alturaPallet;
-	
+
 	@Column(name = "nr_largura")
 	private Float larguraPallet;
-	
+
 	@Column(name = "nr_Profundidade")
 	private Float comprimentoPallet;
-	
+
 	@Column(name = "Nr_AlturaCaixa")
 	private Float alturaCaixa;
-	
+
 	@Column(name = "Nr_LarguraCaixa")
 	private Float larguraCaixa;
-	
+
 	@Column(name = "Nr_ProfunidadeCaixa")
 	private Float comprimentoCaixa;
-	
+
 	@Column(name = "Qt_MinimaEstoque")
 	private Float quantidadeMinima;
-	
-	@Column(name = "fg_DataValidade")//Usa data de validade para medir a vida util
+
+	@Column(name = "fg_DataValidade") // Usa data de validade para medir a vida util
 	private Boolean usaDataValidade;
-	
-	@Column(name = "fg_DataFabricacao") //Usa data de fabricação para medir a vida util
+
+	@Column(name = "fg_DataFabricacao") // Usa data de fabricação para medir a vida util
 	private Boolean usaDataFabricacao;
-	
-	@Column(name = "fg_Status")//Produto ativo ou inativo
+
+	@Column(name = "fg_Status") // Produto ativo ou inativo
 	private Boolean situacao;
-	
-	//32 campos
-	
+
+	// 32 campos
+
 	public Produto() {
-		
+
 	}
-	
-	public Produto(Usuario idUsuario, UnidadeMedida idUnidadeMedida, CategoriaGalpao idCategoriaGalpao, String codProduto, String codFabricante, String descricao, String nome, String ean, String dum, Integer vidaUtil, Float unidadePorPallet, Integer quantidadeProdutoCaixa, Float metroQuadrado, LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, Float pesoLiquido, Float pesoBruto, Float pesoEmbalagem, Integer lastroNormaPallet, Integer alturaNormaPallet, Float camadaNormaPallet, Float alturaPallet, Float larguraPallet, Float comprimentoPallet, Float comprimentoCaixa, Float alturaCaixa, Float larguraCaixa, Float quantidadeMinima, Boolean usaDataFabricacao, Boolean usaDataValidade, Boolean situacao) {
-		
+
+	public Produto(Usuario idUsuario, UnidadeMedida idUnidadeMedida, CategoriaGalpao idCategoriaGalpao,
+			String codProduto, String codFabricante, String descricao, String nome, String ean, String dum,
+			Integer vidaUtil, Float unidadePorPallet, Integer quantidadeProdutoCaixa, Float metroQuadrado,
+			LocalDateTime dataCadastro, LocalDateTime dataAtualizacao, Float pesoLiquido, Float pesoBruto,
+			Float pesoEmbalagem, Integer lastroNormaPallet, Integer alturaNormaPallet, Float camadaNormaPallet,
+			Float alturaPallet, Float larguraPallet, Float comprimentoPallet, Float comprimentoCaixa, Float alturaCaixa,
+			Float larguraCaixa, Float quantidadeMinima, Boolean usaDataFabricacao, Boolean usaDataValidade,
+			Boolean situacao) {
+
 		this.idUsuario = idUsuario;
 		this.idUnidadeMedida = idUnidadeMedida;
 		this.idCategoriaGalpao = idCategoriaGalpao;
-		this.codProduto = codProduto;
-		this.codFabricante = codFabricante;
+		this.codigoProduto = codProduto;
+		this.codigoFabricante = codFabricante;
 		this.descricao = descricao;
 		this.nome = nome;
 		this.ean = ean;
@@ -147,7 +154,7 @@ public class Produto {
 		this.pesoEmbalagem = pesoEmbalagem;
 		this.lastroNormaPallet = lastroNormaPallet;
 		this.alturaNormaPallet = alturaNormaPallet;
-		this.camadaNormaPallet = camadaNormaPallet; 
+		this.camadaNormaPallet = camadaNormaPallet;
 		this.alturaPallet = alturaPallet;
 		this.larguraPallet = larguraPallet;
 		this.comprimentoPallet = comprimentoPallet;
@@ -158,7 +165,7 @@ public class Produto {
 		this.usaDataFabricacao = usaDataFabricacao;
 		this.usaDataValidade = usaDataValidade;
 		this.situacao = situacao;
-		
+
 	}
 
 	public Long getId() {
@@ -193,20 +200,20 @@ public class Produto {
 		this.idCategoriaGalpao = idCategoriaGalpao;
 	}
 
-	public String getCodFabricante() {
-		return codFabricante;
+	public String getCodigoFabricante() {
+		return codigoFabricante;
 	}
 
-	public void setCodFabricante(String codFabricante) {
-		this.codFabricante = codFabricante;
+	public void setCodigoFabricante(String codigoFabricante) {
+		this.codigoFabricante = codigoFabricante;
 	}
 
-	public String getCodProduto() {
-		return codProduto;
+	public String getCodigoProduto() {
+		return codigoProduto;
 	}
 
-	public void setCodProduto(String codProduto) {
-		this.codProduto = codProduto;
+	public void setCodigoProduto(String codigoProduto) {
+		this.codigoProduto = codigoProduto;
 	}
 
 	public String getDescricao() {
@@ -416,6 +423,5 @@ public class Produto {
 	public void setSituacao(Boolean situacao) {
 		this.situacao = situacao;
 	}
-	
-	
+
 }

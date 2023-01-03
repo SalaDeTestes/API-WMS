@@ -11,22 +11,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tbTipoCaminhao")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class TipoCaminhao {
-	
-	
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pk_Id_TipoCaminhao")
 	private Long id;
-	
+
 	@Column(name = "Ds_TipoCaminhao")
 	private String descricao;
-	
-	
+
 	public TipoCaminhao() {
-		
+
 	}
-	
+
 	public TipoCaminhao(String descricao) {
 		this.descricao = descricao;
 	}
@@ -47,5 +46,4 @@ public class TipoCaminhao {
 		this.descricao = descricao;
 	}
 
-	
 }
