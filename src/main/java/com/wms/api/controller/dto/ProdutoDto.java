@@ -43,6 +43,43 @@ public class ProdutoDto {
 	private Boolean usaDataValidade;
 	private Boolean usaDataFabricacao;
 	private Boolean situacao;
+	
+	
+	public ProdutoDto(Produto produto) {
+
+		this.id = produto.getId();
+		this.idUsuario = produto.getIdUsuario();
+		this.idUnidadeMedida = produto.getIdUnidadeMedida();
+		this.idCategoriaGalpao = produto.getIdCategoriaGalpao();
+		this.codigoProduto = produto.getCodigoProduto();
+		this.codigoFabricante = produto.getCodigoFabricante();
+		this.descricao = produto.getDescricao();
+		this.nome = produto.getNome();
+		this.ean = produto.getEan();
+		this.dum = produto.getDum();
+		this.vidaUtil = produto.getVidaUtil();
+		this.unidadePorPallet = produto.getUnidadePorPallet();
+		this.quantidadeProdutoCaixa = produto.getQuantidadeProdutoCaixa();
+		this.metroQuadrado = produto.getMetroQuadrado();
+		this.dataCadastro = produto.getDataCadastro();
+		this.dataAtualizacao = produto.getDataAtualizacao();
+		this.pesoLiquido = produto.getPesoLiquido();
+		this.pesoBruto = produto.getPesoBruto();
+		this.pesoEmbalagem = produto.getPesoEmbalagem();
+		this.lastroNormaPallet = produto.getLastroNormaPallet();
+		this.alturaNormaPallet = produto.getAlturaNormaPallet();
+		this.camadaNormaPallet = produto.getCamadaNormaPallet();
+		this.alturaPallet = produto.getAlturaPallet();
+		this.larguraPallet = produto.getLarguraPallet();
+		this.comprimentoPallet = produto.getComprimentoPallet();
+		this.comprimentoCaixa = produto.getComprimentoCaixa();
+		this.alturaCaixa = produto.getAlturaCaixa();
+		this.larguraCaixa = produto.getLarguraCaixa();
+		this.quantidadeMinima = produto.getQuantidadeMinima();
+		this.usaDataFabricacao = produto.getUsaDataFabricacao();
+		this.usaDataValidade = produto.getUsaDataValidade();
+		this.situacao = produto.getSituacao();
+	}
 
 	public Long getId() {
 		return id;
@@ -172,41 +209,6 @@ public class ProdutoDto {
 		return situacao;
 	}
 
-	public ProdutoDto(Produto produto) {
-
-		this.id = produto.getId();
-		this.idUsuario = produto.getIdUsuario();
-		this.idUnidadeMedida = produto.getIdUnidadeMedida();
-		this.idCategoriaGalpao = produto.getIdCategoriaGalpao();
-		this.codigoProduto = produto.getCodigoProduto();
-		this.codigoFabricante = produto.getCodigoFabricante();
-		this.descricao = produto.getDescricao();
-		this.nome = produto.getNome();
-		this.ean = produto.getEan();
-		this.dum = produto.getDum();
-		this.vidaUtil = produto.getVidaUtil();
-		this.unidadePorPallet = produto.getUnidadePorPallet();
-		this.quantidadeProdutoCaixa = produto.getQuantidadeProdutoCaixa();
-		this.metroQuadrado = produto.getMetroQuadrado();
-		this.dataCadastro = produto.getDataCadastro();
-		this.dataAtualizacao = produto.getDataAtualizacao();
-		this.pesoLiquido = produto.getPesoLiquido();
-		this.pesoBruto = produto.getPesoBruto();
-		this.pesoEmbalagem = produto.getPesoEmbalagem();
-		this.lastroNormaPallet = produto.getLastroNormaPallet();
-		this.alturaNormaPallet = produto.getAlturaNormaPallet();
-		this.camadaNormaPallet = produto.getCamadaNormaPallet();
-		this.alturaPallet = produto.getAlturaPallet();
-		this.larguraPallet = produto.getLarguraPallet();
-		this.comprimentoPallet = produto.getComprimentoPallet();
-		this.comprimentoCaixa = produto.getComprimentoCaixa();
-		this.alturaCaixa = produto.getAlturaCaixa();
-		this.larguraCaixa = produto.getLarguraCaixa();
-		this.quantidadeMinima = produto.getQuantidadeMinima();
-		this.usaDataFabricacao = produto.getUsaDataFabricacao();
-		this.usaDataValidade = produto.getUsaDataValidade();
-		this.situacao = produto.getSituacao();
-	}
 
 	public static List<ProdutoDto> converter(List<Produto> produto) {
 		return produto.stream().map(ProdutoDto::new).collect(Collectors.toList());

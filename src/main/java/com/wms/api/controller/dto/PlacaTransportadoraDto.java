@@ -10,7 +10,7 @@ public class PlacaTransportadoraDto {
 
 	private Long id;
 	private Transportadora idTransportadora;
-	private Long idUf;
+	private Integer idUf;
 	private String descricao;
 
 	public PlacaTransportadoraDto(PlacaTransportadora placa) {
@@ -29,7 +29,7 @@ public class PlacaTransportadoraDto {
 		return idTransportadora;
 	}
 
-	public Long getIdUf() {
+	public Integer getIdUf() {
 		return idUf;
 	}
 

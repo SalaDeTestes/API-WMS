@@ -7,7 +7,7 @@ import com.wms.api.repository.TransportadoraRepository;
 public class PlacaTransportadoraForm {
 
 	private Integer idTransportadora;
-	private Long idUf;
+	private Integer idUf;
 	private String descricao;
 
 	public Integer getIdTransportadora() {
@@ -18,11 +18,11 @@ public class PlacaTransportadoraForm {
 		this.idTransportadora = idTransportadora;
 	}
 
-	public Long getIdUf() {
+	public Integer getIdUf() {
 		return idUf;
 	}
 
-	public void setIdUf(Long idUf) {
+	public void setIdUf(Integer idUf) {
 		this.idUf = idUf;
 	}
 

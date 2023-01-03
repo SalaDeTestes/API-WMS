@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -28,14 +29,15 @@ public class PlacaTransportadora {
 	@ManyToOne
 	private Transportadora idTransportadora;
 
+	@NotNull
 	@Column(name = "fk_Uf_Placa")
-	private Long idUf;
+	private Integer idUf;
 
 	public PlacaTransportadora() {
 
 	}
 
-	public PlacaTransportadora(Transportadora idTransportadora, Long idUf, String descricao) {
+	public PlacaTransportadora(Transportadora idTransportadora, Integer idUf, String descricao) {
 
 		this.idTransportadora = idTransportadora;
 		this.idUf = idUf;
@@ -58,11 +60,11 @@ public class PlacaTransportadora {
 		this.idTransportadora = idTransportadora;
 	}
 
-	public Long getIdUf() {
+	public Integer getIdUf() {
 		return idUf;
 	}
 
-	public void setIdUf(Long idUf) {
+	public void setIdUf(Integer idUf) {
 		this.idUf = idUf;
 	}
 
