@@ -131,7 +131,7 @@ public class NotaFiscalProdutoForm {
 		nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
 		nfProduto.setValorUnitario(valorUnitario);
 		nfProduto.setEstoqueRetido(estoqueRetido);
-		nfProduto.setEstoqueLiberado(quantidadeProduto);
+		nfProduto.setEstoqueLiberado(estoqueLiberado);
 		nfProduto.setPesoUnitario(pesoUnitario);
 		nfProduto.setDataFabricacao(dataFabricacao);
 		nfProduto.setDataValidade(dataValidade);
@@ -152,7 +152,7 @@ public NotaFiscalProduto atualizar(Long id, NotaFiscalProdutoRepository nfprodut
 		nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
 		nfProduto.setValorUnitario(valorUnitario);
 		nfProduto.setEstoqueRetido(estoqueRetido);
-		nfProduto.setEstoqueLiberado(quantidadeProduto);
+		nfProduto.setEstoqueLiberado(estoqueLiberado);
 		nfProduto.setPesoUnitario(pesoUnitario);
 		nfProduto.setDataFabricacao(dataFabricacao);
 		nfProduto.setDataValidade(dataValidade);

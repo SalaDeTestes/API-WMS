@@ -2,12 +2,14 @@ package com.wms.api.controller.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.wms.api.models.Cliente;
 import com.wms.api.models.Motorista;
 import com.wms.api.models.NotaFiscal;
+import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.models.PlacaTransportadora;
 import com.wms.api.models.StatusNF;
 import com.wms.api.models.TipoCaminhao;
@@ -38,6 +40,7 @@ public class NotaFiscalDto {
 	private Motorista idMotorista;
 	private Boolean entradaValidada;
 	private TipoCaminhao idTipoCaminhao;
+	private List<NotaFiscalProduto> produtos = new ArrayList<>();
 
 	public NotaFiscalDto(NotaFiscal nf) {
 		this.id = nf.getId();
@@ -61,6 +64,7 @@ public class NotaFiscalDto {
 		this.idMotorista = nf.getIdMotorista();
 		this.entradaValidada = nf.getEntradaValidada();
 		this.idTipoCaminhao = nf.getIdTipoCaminhao();
+		this.produtos = nf.getNotaFiscalProduto();
 	}
 
 	public Long getId() {
@@ -145,6 +149,11 @@ public class NotaFiscalDto {
 
 	public TipoCaminhao getIdTipoCaminhao() {
 		return idTipoCaminhao;
+	}
+	
+
+	public List<NotaFiscalProduto> getProdutos() {
+		return produtos;
 	}
 
 	public static List<NotaFiscalDto> converter(List<NotaFiscal> nf) {

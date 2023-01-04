@@ -24,6 +24,7 @@ import com.wms.api.form.NotaFiscalForm;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.MotoristaRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.PlacaTransportadoraRepository;
 import com.wms.api.repository.StatusNFRepository;
@@ -31,6 +32,7 @@ import com.wms.api.repository.TipoCaminhaoRepository;
 import com.wms.api.repository.TipoNotaEntradaRepository;
 import com.wms.api.repository.TransportadoraRepository;
 import com.wms.api.repository.UsuarioRepository;
+import com.wms.api.services.NotaFiscalService;
 
 @RestController
 @RequestMapping("/notafiscal")
@@ -62,6 +64,9 @@ public class NotaFiscalController {
 	
 	@Autowired
 	TipoCaminhaoRepository caminhaoRepository;
+	
+	@Autowired
+	NotaFiscalProdutoRepository nfProdutoRepository;
 
 	@GetMapping
 	@Transactional
@@ -72,12 +77,13 @@ public class NotaFiscalController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<NotaFiscalDto> cadastrar(@RequestBody @Valid NotaFiscalForm form,
+	public ResponseEntity<NotaFiscalDto> cadastrar(@RequestBody @Valid NotaFiscalForm form, NotaFiscalService service,
 			UriComponentsBuilder uriBuilder) {
 		NotaFiscal nf = form.formulario(transportadoraRepository, usuarioRepository, statusRepository,
 				clienteRepository, placaRepository, motoristaRepository, tipoRepository, caminhaoRepository);
 
 		nfRepository.save(nf);
+		service.ItensDaNota(form, nfProdutoRepository);
 
 		URI uri = uriBuilder.path("/notafiscal/{id}").buildAndExpand(nf.getId()).toUri();
 

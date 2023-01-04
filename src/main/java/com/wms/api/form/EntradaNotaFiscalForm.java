@@ -5,20 +5,21 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.MotoristaRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.PlacaTransportadoraRepository;
+import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.repository.StatusNFRepository;
 import com.wms.api.repository.TipoCaminhaoRepository;
 import com.wms.api.repository.TipoNotaEntradaRepository;
 import com.wms.api.repository.TransportadoraRepository;
 import com.wms.api.repository.UsuarioRepository;
 
-public class NotaFiscalForm {
+public class EntradaNotaFiscalForm {
 
 	private Integer idTransportadora;
 	private Long idUsuario;
@@ -211,13 +212,14 @@ public class NotaFiscalForm {
 	public void setProdutos(List<NotaFiscalProduto> produtos) {
 		this.produtos = produtos;
 	}
-	
 
+	
 
 	public NotaFiscal formulario(TransportadoraRepository transportadoraRepository, UsuarioRepository usuarioRepository,
 			StatusNFRepository statusRepository, ClienteRepository clienteRepository,
 			PlacaTransportadoraRepository placaRepository, MotoristaRepository motoristaRepository,
-			TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository) {
+			TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository,
+			NotaFiscalProdutoRepository nfprodutoRepository, ProdutoRepository produtoRepository) {
 
 		NotaFiscal nf = new NotaFiscal();
 
@@ -258,12 +260,7 @@ public class NotaFiscalForm {
 		nf.setIdTipoEntrada(tipoRepository.getReferenceById(idTipoEntrada));
 		nf.setEntradaValidada(false);
 		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
-		nf.setNotaFiscalProduto(produtos);
-		
 
-		
-		System.out.print("lote: " + produtos.get(0).getLote() + "  ");
-		
 		return nf;
 	}
 
@@ -271,7 +268,7 @@ public class NotaFiscalForm {
 			UsuarioRepository usuarioRepository, StatusNFRepository statusRepository, NotaFiscalRepository nfRepository,
 			ClienteRepository clienteRepository, PlacaTransportadoraRepository placaRepository,
 			MotoristaRepository motoristaRepository, TipoNotaEntradaRepository tipoRepository,
-			TipoCaminhaoRepository caminhaoRepository) {
+			TipoCaminhaoRepository caminhaoRepository,ProdutoRepository produtoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
 

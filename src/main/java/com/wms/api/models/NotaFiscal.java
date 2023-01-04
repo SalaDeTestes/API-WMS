@@ -2,6 +2,8 @@ package com.wms.api.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -92,6 +95,9 @@ public class NotaFiscal {
 	@Column(name = "Ds_PlacaTransporte")
 	private String descricaoPlaca;
 
+	@OneToMany(mappedBy = "idNotaFiscal")
+	private List<NotaFiscalProduto> notaFiscalProduto = new ArrayList<>();
+
 	public NotaFiscal() {
 
 	}
@@ -100,7 +106,8 @@ public class NotaFiscal {
 			String numeroSerie, LocalDate dataEmissao, LocalDateTime dataLancamento, String observacao, String chaveNfe,
 			Cliente idCliente, PlacaTransportadora idPlaca, Float pesoLiquido, Float pesoBruto,
 			LocalDateTime dataCancelamento, String numeroCarga, String descricaoPlaca, TipoNotaEntrada idTipoEntrada,
-			Motorista idMotorista, Boolean entradaValidada, TipoCaminhao idTipoCaminhao) {
+			Motorista idMotorista, Boolean entradaValidada, TipoCaminhao idTipoCaminhao,
+			List<NotaFiscalProduto> notaFiscalProduto) {
 		this.idTransportadora = idTransportadora;
 		this.idUsuario = idUsuario;
 		this.idStatusNF = idStatusNF;
@@ -121,6 +128,7 @@ public class NotaFiscal {
 		this.idMotorista = idMotorista;
 		this.entradaValidada = entradaValidada;
 		this.idTipoCaminhao = idTipoCaminhao;
+		this.notaFiscalProduto = notaFiscalProduto;
 
 	}
 
@@ -290,6 +298,14 @@ public class NotaFiscal {
 
 	public void setIdTipoCaminhao(TipoCaminhao idTipoCaminhao) {
 		this.idTipoCaminhao = idTipoCaminhao;
+	}
+
+	public List<NotaFiscalProduto> getNotaFiscalProduto() {
+		return notaFiscalProduto;
+	}
+
+	public void setNotaFiscalProduto(List<NotaFiscalProduto> notaFiscalProduto) {
+		this.notaFiscalProduto = notaFiscalProduto;
 	}
 
 }
