@@ -83,7 +83,7 @@ public class NotaFiscalController {
 				clienteRepository, placaRepository, motoristaRepository, tipoRepository, caminhaoRepository);
 
 		nfRepository.save(nf);
-		service.ItensDaNota(form, nfProdutoRepository);
+		service.ItensDaNota(nf, nfProdutoRepository);
 
 		URI uri = uriBuilder.path("/notafiscal/{id}").buildAndExpand(nf.getId()).toUri();
 

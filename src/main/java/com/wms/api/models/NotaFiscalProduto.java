@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -23,6 +24,7 @@ public class NotaFiscalProduto {
 	private Long id;
 
 	@ManyToOne
+    @JsonIgnore
 	@JoinColumn(name = "fk_Id_ControleEntrada")
 	private NotaFiscal idNotaFiscal;
 
