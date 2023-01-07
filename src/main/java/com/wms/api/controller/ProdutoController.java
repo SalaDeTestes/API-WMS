@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,13 +49,15 @@ public class ProdutoController {
 
 	@GetMapping
 	@Transactional
-	public List<ProdutoDto> listar() {
-		List<Produto> produto = produtoRepository.findAll();
-		return ProdutoDto.converter(produto);
+	@Cacheable(value = "produtoRepository")
+	public Page<ProdutoDto> listar(Pageable paginacao) {
+
+		return produtoRepository.findAll(paginacao).map(ProdutoDto::new);
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "produtoRepository", allEntries = true)
 	public ResponseEntity<ProdutoDto> cadastrar(@RequestBody @Valid ProdutoForm form, UriComponentsBuilder uriBuilder) {
 		Produto produto = form.formulario(usuarioRepository, medidaRepository, categoriaGalpaoRepository);
 
@@ -65,6 +71,7 @@ public class ProdutoController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "produtoRepository")
 	public ResponseEntity<ProdutoDto> detalhar(@PathVariable Long id) {
 		Optional<Produto> produto = produtoRepository.findById(id);
 		if (produto.isPresent()) {
@@ -76,6 +83,7 @@ public class ProdutoController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "produtoRepository")
 	public ResponseEntity<ProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid ProdutoForm form) {
 		Optional<Produto> optional = produtoRepository.findById(id);
 		if (optional.isPresent()) {
@@ -89,6 +97,7 @@ public class ProdutoController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "produtoRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<Produto> optional = produtoRepository.findById(id);
 		if (optional.isPresent()) {

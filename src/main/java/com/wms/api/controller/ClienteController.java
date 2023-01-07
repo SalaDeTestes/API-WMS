@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +37,15 @@ public class ClienteController {
 
 	@GetMapping
 	@Transactional
-	public List<ClienteDto> listar() {
-		List<Cliente> cliente = clienteRepository.findAll();
-		return ClienteDto.converter(cliente);
+	@Cacheable(value = "clienteRepository")
+	public Page<ClienteDto> listar(Pageable paginacao) {
+
+		return clienteRepository.findAll(paginacao).map(ClienteDto::new);
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "clienteRepository", allEntries = true)
 	public ResponseEntity<ClienteDto> cadastrar(@RequestBody @Valid ClienteForm form, UriComponentsBuilder uriBuilder) {
 		Cliente cliente = form.formulario();
 
@@ -64,6 +70,7 @@ public class ClienteController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "clienteRepository")
 	public ResponseEntity<ClienteDto> atualizar(@PathVariable Long id, @RequestBody @Valid ClienteForm form) {
 		Optional<Cliente> optional = clienteRepository.findById(id);
 		if (optional.isPresent()) {
@@ -76,6 +83,7 @@ public class ClienteController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "clienteRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<Cliente> optional = clienteRepository.findById(id);
 		if (optional.isPresent()) {

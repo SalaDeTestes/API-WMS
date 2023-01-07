@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,40 +37,31 @@ public class NotaFiscalProdutoController {
 
 	@Autowired
 	NotaFiscalRepository nfRepository;
-	
+
 	@Autowired
 	NotaFiscalProdutoRepository nfprodutoRepository;
 
 	@Autowired
 	UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	ProdutoRepository produtoRepository;
 
-
-	
-
 	@GetMapping
 	@Transactional
-	public List<NotaFiscalProdutoDto> listar(Long idNotaFiscal) {
-		
-		if (idNotaFiscal == null) {
-			List<NotaFiscalProduto> nfproduto = nfprodutoRepository.findAll();
-			return NotaFiscalProdutoDto.converter(nfproduto);
+	@Cacheable(value = "nfprodutoRepository")
+	public Page<NotaFiscalProdutoDto> listar(Pageable paginacao) {
 
-		} else {
+		return nfprodutoRepository.findAll(paginacao).map(NotaFiscalProdutoDto::new);
 
-			List<NotaFiscalProduto> nfproduto = nfprodutoRepository.findByIdNotaFiscal(idNotaFiscal);
-			return NotaFiscalProdutoDto.converter(nfproduto);
-		}
-		
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "nfprodutoRepository", allEntries = true)
 	public ResponseEntity<NotaFiscalProdutoDto> cadastrar(@RequestBody @Valid NotaFiscalProdutoForm form,
 			UriComponentsBuilder uriBuilder) {
-		NotaFiscalProduto nfproduto = form.formulario(nfRepository, produtoRepository );
+		NotaFiscalProduto nfproduto = form.formulario(nfRepository, produtoRepository);
 
 		nfprodutoRepository.save(nfproduto);
 
@@ -78,6 +73,7 @@ public class NotaFiscalProdutoController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "nfprodutoRepository")
 	public ResponseEntity<NotaFiscalProdutoDto> detalhar(@PathVariable Long id) {
 		Optional<NotaFiscalProduto> nfproduto = nfprodutoRepository.findById(id);
 		if (nfproduto.isPresent()) {
@@ -89,10 +85,12 @@ public class NotaFiscalProdutoController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<NotaFiscalProdutoDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalProdutoForm form) {
+	@CachePut(value = "nfprodutoRepository")
+	public ResponseEntity<NotaFiscalProdutoDto> atualizar(@PathVariable Long id,
+			@RequestBody @Valid NotaFiscalProdutoForm form) {
 		Optional<NotaFiscalProduto> optional = nfprodutoRepository.findById(id);
 		if (optional.isPresent()) {
-			NotaFiscalProduto nfproduto = form.atualizar(id, nfprodutoRepository,nfRepository, produtoRepository);
+			NotaFiscalProduto nfproduto = form.atualizar(id, nfprodutoRepository, nfRepository, produtoRepository);
 			return ResponseEntity.ok(new NotaFiscalProdutoDto(nfproduto));
 		}
 
@@ -101,6 +99,7 @@ public class NotaFiscalProdutoController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "nfprodutoRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<NotaFiscalProduto> optional = nfprodutoRepository.findById(id);
 		if (optional.isPresent()) {

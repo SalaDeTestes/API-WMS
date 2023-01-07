@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,25 +32,24 @@ import com.wms.api.repository.TipoNotaEntradaRepository;
 @RequestMapping("/tiponotaentrada")
 public class TipoNotaEntradaController {
 
-	
 	@Autowired
 	TipoNotaEntradaRepository tipoRepository;
-		
-	
-	
+
 	@GetMapping
 	@Transactional
-	public List<TipoNotaEntradaDto> listar()	{
-		List<TipoNotaEntrada> tipo = tipoRepository.findAll();
-		return TipoNotaEntradaDto.converter(tipo);
+	@Cacheable(value = "tipoRepository")
+	public Page<TipoNotaEntradaDto> listar(Pageable paginacao) {
+
+		return tipoRepository.findAll(paginacao).map(TipoNotaEntradaDto::new);
 	}
-	
-	
+
 	@PostMapping
 	@Transactional
-	public ResponseEntity<TipoNotaEntradaDto> cadastrar(@RequestBody @Valid TipoNotaEntradaForm form, UriComponentsBuilder uriBuilder) {
+	@CacheEvict(value = "tipoRepository", allEntries = true)
+	public ResponseEntity<TipoNotaEntradaDto> cadastrar(@RequestBody @Valid TipoNotaEntradaForm form,
+			UriComponentsBuilder uriBuilder) {
 		TipoNotaEntrada tipo = form.formulario();
-		
+
 		tipoRepository.save(tipo);
 
 		URI uri = uriBuilder.path("/motorista/{id}").buildAndExpand(tipo.getId()).toUri();
@@ -54,9 +57,10 @@ public class TipoNotaEntradaController {
 		return ResponseEntity.created(uri).body(new TipoNotaEntradaDto(tipo));
 
 	}
-	
+
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "tipoRepository")
 	public ResponseEntity<TipoNotaEntradaDto> detalhar(@PathVariable Long id) {
 		Optional<TipoNotaEntrada> tipo = tipoRepository.findById(id);
 		if (tipo.isPresent()) {
@@ -68,7 +72,9 @@ public class TipoNotaEntradaController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<TipoNotaEntradaDto> atualizar(@PathVariable Long id, @RequestBody @Valid TipoNotaEntradaForm form) {
+	@CachePut(value = "tipoRepository")
+	public ResponseEntity<TipoNotaEntradaDto> atualizar(@PathVariable Long id,
+			@RequestBody @Valid TipoNotaEntradaForm form) {
 		Optional<TipoNotaEntrada> optional = tipoRepository.findById(id);
 		if (optional.isPresent()) {
 			TipoNotaEntrada tipo = form.atualizar(id, tipoRepository);
@@ -80,6 +86,7 @@ public class TipoNotaEntradaController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "tipoRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<TipoNotaEntrada> optional = tipoRepository.findById(id);
 		if (optional.isPresent()) {

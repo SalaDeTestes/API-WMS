@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,28 +59,33 @@ public class NotaFiscalController {
 
 	@Autowired
 	PlacaTransportadoraRepository placaRepository;
-	
+
 	@Autowired
 	MotoristaRepository motoristaRepository;
-	
+
 	@Autowired
 	TipoNotaEntradaRepository tipoRepository;
-	
+
 	@Autowired
 	TipoCaminhaoRepository caminhaoRepository;
-	
+
 	@Autowired
 	NotaFiscalProdutoRepository nfProdutoRepository;
 
 	@GetMapping
 	@Transactional
-	public List<NotaFiscalDto> listar() {
-		List<NotaFiscal> nf = nfRepository.findAll();
-		return NotaFiscalDto.converter(nf);
+	@Cacheable(value = "nfRepository")
+	public Page<NotaFiscalDto> listar(Pageable paginacao) {
+		return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
+
+		// http://localhost:8080/notafiscal?size=10&page=3000
+		// size = quantidade de elemetos na pagina
+		// page = numero atual da pagina
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "nfRepository", allEntries = true)
 	public ResponseEntity<NotaFiscalDto> cadastrar(@RequestBody @Valid NotaFiscalForm form, NotaFiscalService service,
 			UriComponentsBuilder uriBuilder) {
 		NotaFiscal nf = form.formulario(transportadoraRepository, usuarioRepository, statusRepository,
@@ -93,6 +102,7 @@ public class NotaFiscalController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "nfRepository")
 	public ResponseEntity<NotaFiscalDto> detalhar(@PathVariable Long id) {
 		Optional<NotaFiscal> nf = nfRepository.findById(id);
 		if (nf.isPresent()) {
@@ -104,11 +114,13 @@ public class NotaFiscalController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "nfRepository")
 	public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {
 			NotaFiscal nf = form.atualizar(id, transportadoraRepository, usuarioRepository, statusRepository,
-					nfRepository, clienteRepository, placaRepository, motoristaRepository, tipoRepository, caminhaoRepository);
+					nfRepository, clienteRepository, placaRepository, motoristaRepository, tipoRepository,
+					caminhaoRepository);
 			return ResponseEntity.ok(new NotaFiscalDto(nf));
 		}
 
@@ -117,6 +129,7 @@ public class NotaFiscalController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "nfRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {

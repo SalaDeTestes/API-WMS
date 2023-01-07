@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,14 +43,19 @@ public class MotoristaController {
 	
 	@GetMapping
 	@Transactional
-	public List<MotoristaDto> listar()	{
-		List<Motorista> motorista = motoristaRepository.findAll();
-		return MotoristaDto.converter(motorista);
+	@Cacheable(value = "motoristaRepository")
+	public Page<MotoristaDto> listar(Pageable paginacao)	{
+		
+		return motoristaRepository.findAll(paginacao).map(MotoristaDto::new);
+				// http://localhost:8080/notafiscal?size=10&page=3000
+				// size = quantidade de elemetos na pagina
+				// page = numero atual da pagina
 	}
 	
 	
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "motoristaRepository", allEntries = true)
 	public ResponseEntity<MotoristaDto> cadastrar(@RequestBody @Valid MotoristaForm form, UriComponentsBuilder uriBuilder) {
 		Motorista motorista = form.formulario(transportadoraRepository);
 		
@@ -60,6 +69,7 @@ public class MotoristaController {
 	
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "motoristaRepository")
 	public ResponseEntity<MotoristaDto> detalhar(@PathVariable Long id) {
 		Optional<Motorista> motorista = motoristaRepository.findById(id);
 		if (motorista.isPresent()) {
@@ -71,6 +81,7 @@ public class MotoristaController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "motoristaRepository")
 	public ResponseEntity<MotoristaDto> atualizar(@PathVariable Long id, @RequestBody @Valid MotoristaForm form) {
 		Optional<Motorista> optional = motoristaRepository.findById(id);
 		if (optional.isPresent()) {
@@ -83,6 +94,7 @@ public class MotoristaController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "motoristaRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<Motorista> optional = motoristaRepository.findById(id);
 		if (optional.isPresent()) {

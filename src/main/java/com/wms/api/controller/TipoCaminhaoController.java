@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,22 +34,22 @@ public class TipoCaminhaoController {
 
 	@Autowired
 	TipoCaminhaoRepository caminhaoRepository;
-		
-	
-	
+
 	@GetMapping
 	@Transactional
-	public List<TipoCaminhaoDto> listar()	{
-		List<TipoCaminhao> caminhao = caminhaoRepository.findAll();
-		return TipoCaminhaoDto.converter(caminhao);
+	@Cacheable(value = "caminhaoRepository")
+	public Page<TipoCaminhaoDto> listar(Pageable paginacao) {
+
+		return caminhaoRepository.findAll(paginacao).map(TipoCaminhaoDto::new);
 	}
-	
-	
+
 	@PostMapping
 	@Transactional
-	public ResponseEntity<TipoCaminhaoDto> cadastrar(@RequestBody @Valid TipoCaminhaoForm form, UriComponentsBuilder uriBuilder) {
+	@CacheEvict(value = "caminhaoRepository", allEntries = true)
+	public ResponseEntity<TipoCaminhaoDto> cadastrar(@RequestBody @Valid TipoCaminhaoForm form,
+			UriComponentsBuilder uriBuilder) {
 		TipoCaminhao caminhao = form.formulario();
-		
+
 		caminhaoRepository.save(caminhao);
 
 		URI uri = uriBuilder.path("/tipocaminhao/{id}").buildAndExpand(caminhao.getId()).toUri();
@@ -53,9 +57,10 @@ public class TipoCaminhaoController {
 		return ResponseEntity.created(uri).body(new TipoCaminhaoDto(caminhao));
 
 	}
-	
+
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "caminhaoRepository")
 	public ResponseEntity<TipoCaminhaoDto> detalhar(@PathVariable Long id) {
 		Optional<TipoCaminhao> caminhao = caminhaoRepository.findById(id);
 		if (caminhao.isPresent()) {
@@ -67,6 +72,7 @@ public class TipoCaminhaoController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "caminhaoRepository")
 	public ResponseEntity<TipoCaminhaoDto> atualizar(@PathVariable Long id, @RequestBody @Valid TipoCaminhaoForm form) {
 		Optional<TipoCaminhao> optional = caminhaoRepository.findById(id);
 		if (optional.isPresent()) {
@@ -79,6 +85,7 @@ public class TipoCaminhaoController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "caminhaoRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<TipoCaminhao> optional = caminhaoRepository.findById(id);
 		if (optional.isPresent()) {

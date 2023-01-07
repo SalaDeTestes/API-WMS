@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,16 +37,16 @@ public class StatusNFController {
 
 	@GetMapping
 	@Transactional
-	public List<StatusNFDto> lista(
-			String nome) {/* String nomeCurso é o parametro passado dentro da URL, cria um filtro */
+	@Cacheable(value = "statusRepository")
+	public Page<StatusNFDto> lista(Pageable paginacao) {
 
-		List<StatusNF> status = statusRepository.findAll();
-		return StatusNFDto.converter(status);
+		return statusRepository.findAll(paginacao).map(StatusNFDto::new);
 
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "statusRepository", allEntries = true)
 	public ResponseEntity<StatusNFDto> cadastrar(@RequestBody @Valid StatusNFForm form,
 			UriComponentsBuilder uriBuilder) {
 
@@ -55,6 +59,7 @@ public class StatusNFController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "statusRepository")
 	public ResponseEntity<StatusNFDto> detalhar(@PathVariable Long id) {
 		Optional<StatusNF> pessoas = statusRepository.findById(id);
 		if (pessoas.isPresent()) {
@@ -66,6 +71,7 @@ public class StatusNFController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "statusRepository")
 	public ResponseEntity<StatusNFDto> atualizar(@PathVariable Long id, @RequestBody @Valid StatusNFForm form) {
 		Optional<StatusNF> optional = statusRepository.findById(id);
 		if (optional.isPresent()) {
@@ -78,6 +84,7 @@ public class StatusNFController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "statusRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<StatusNF> optional = statusRepository.findById(id);
 		if (optional.isPresent()) {

@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,24 +35,23 @@ public class PlacaTransportadoraController {
 
 	@Autowired
 	private PlacaTransportadoraRepository placaRepository;
-	
 
 	@Autowired
 	private TransportadoraRepository transportadoraRepository;
-	
 
 	@GetMapping
 	@Transactional
-	public List<PlacaTransportadoraDto> lista(
-			String nome) {/* String nomeCurso é o parametro passado dentro da URL, cria um filtro */
+	@Cacheable(value = "placaRepository")
+	public Page<PlacaTransportadoraDto> lista(Pageable paginacao) {
 
-			List<PlacaTransportadora> placa= placaRepository.findAll();
-			return PlacaTransportadoraDto.converter(placa);
+		return placaRepository.findAll(paginacao).map(PlacaTransportadoraDto::new);
 	}
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<PlacaTransportadoraDto> cadastrar(@RequestBody @Valid PlacaTransportadoraForm form, UriComponentsBuilder uriBuilder) {
+	@CacheEvict(value = "placaRepository", allEntries = true)
+	public ResponseEntity<PlacaTransportadoraDto> cadastrar(@RequestBody @Valid PlacaTransportadoraForm form,
+			UriComponentsBuilder uriBuilder) {
 
 		PlacaTransportadora placa = form.formulario(transportadoraRepository);
 		placaRepository.save(placa);
@@ -59,6 +62,7 @@ public class PlacaTransportadoraController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "placaRepository")
 	public ResponseEntity<PlacaTransportadoraDto> detalhar(@PathVariable Long id) {
 		Optional<PlacaTransportadora> placa = placaRepository.findById(id);
 		if (placa.isPresent()) {
@@ -70,10 +74,12 @@ public class PlacaTransportadoraController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<PlacaTransportadoraDto> atualizar(@PathVariable Long id, @RequestBody @Valid PlacaTransportadoraForm form) {
+	@CachePut(value = "placaRepository")
+	public ResponseEntity<PlacaTransportadoraDto> atualizar(@PathVariable Long id,
+			@RequestBody @Valid PlacaTransportadoraForm form) {
 		Optional<PlacaTransportadora> optional = placaRepository.findById(id);
 		if (optional.isPresent()) {
-			PlacaTransportadora placa = form.atualizar(id, transportadoraRepository,  placaRepository);
+			PlacaTransportadora placa = form.atualizar(id, transportadoraRepository, placaRepository);
 			return ResponseEntity.ok(new PlacaTransportadoraDto(placa));
 		}
 
@@ -82,6 +88,7 @@ public class PlacaTransportadoraController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "placaRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<PlacaTransportadora> optional = placaRepository.findById(id);
 		if (optional.isPresent()) {

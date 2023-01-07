@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+
 import com.wms.api.models.Cliente;
 import com.wms.api.models.Motorista;
 import com.wms.api.models.NotaFiscal;
@@ -156,7 +158,7 @@ public class NotaFiscalDto {
 		return produtos;
 	}
 
-	public static List<NotaFiscalDto> converter(List<NotaFiscal> nf) {
+	public static List<NotaFiscalDto> converter(Page<NotaFiscal> nf) {
 
 		return nf.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
 	}

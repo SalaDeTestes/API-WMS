@@ -1,13 +1,17 @@
 package com.wms.api.controller;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,28 +37,16 @@ public class TransportadoraController {
 
 	@GetMapping
 	@Transactional
-	public List<TransportadoraDto> lista(
-			String cnpj) {/* String nomeCurso é o parametro passado dentro da URL, cria um filtro */
+	@Cacheable(value = "transportadoraRepository")
+	public Page<TransportadoraDto> lista(Pageable paginacao) {
 
-		if (cnpj == null) {
-			List<Transportadora> transportadora = transportadoraRepository.findAll();
-			return TransportadoraDto.converter(transportadora);
+		return transportadoraRepository.findAll(paginacao).map(TransportadoraDto::new);
 
-		} else {
-
-			List<Transportadora> transportadora = transportadoraRepository
-					.findByCnpj(cnpj);/*
-										 * Metodo criado detro de topicoRepository para busca somente um atributo de uma
-										 * entidade(nesse caso especifico busca o nome dentro de uma entidade que se
-										 * relaciona com topico findByCursoNome Curso= entidade Nome = atributo de
-										 * curso)
-										 */
-			return TransportadoraDto.converter(transportadora);
-		}
 	}
 
 	@PostMapping
 	@Transactional
+	@CacheEvict(value = "transportadoraRepository", allEntries = true)
 	public ResponseEntity<TransportadoraDto> cadastrar(@RequestBody @Valid TransportadoraForm form,
 			UriComponentsBuilder uriBuilder) {
 
@@ -67,6 +59,7 @@ public class TransportadoraController {
 
 	@GetMapping("/{id}")
 	@Transactional
+	@Cacheable(value = "transportadoraRepository")
 	public ResponseEntity<TransportadoraDto> detalhar(@PathVariable Integer id) {
 		Optional<Transportadora> transportadora = transportadoraRepository.findById(id);
 		if (transportadora.isPresent()) {
@@ -78,6 +71,7 @@ public class TransportadoraController {
 
 	@PutMapping("/{id}")
 	@Transactional
+	@CachePut(value = "transportadoraRepository")
 	public ResponseEntity<TransportadoraDto> atualizar(@PathVariable Integer id,
 			@RequestBody @Valid TransportadoraForm form) {
 		Optional<Transportadora> optional = transportadoraRepository.findById(id);
@@ -91,6 +85,7 @@ public class TransportadoraController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
+	@CacheEvict(value = "transportadoraRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Integer id) {
 		Optional<Transportadora> optional = transportadoraRepository.findById(id);
 		if (optional.isPresent()) {
