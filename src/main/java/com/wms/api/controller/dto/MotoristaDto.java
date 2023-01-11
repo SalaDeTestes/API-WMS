@@ -1,8 +1,5 @@
 package com.wms.api.controller.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.wms.api.models.Motorista;
 import com.wms.api.models.Transportadora;
 
@@ -41,10 +38,6 @@ public class MotoristaDto {
 
 	public String getCpf() {
 		return cpf;
-	}
-
-	public static List<MotoristaDto> converter(List<Motorista> motorista) {
-		return motorista.stream().map(MotoristaDto::new).collect(Collectors.toList());
 	}
 
 }

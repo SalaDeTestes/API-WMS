@@ -1,13 +1,10 @@
 package com.wms.api.controller.dto;
 
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.wms.api.models.Usuario;
 
 public class UsuarioDto {
 
+	private Long id;
 	private String login;
 	private String nome;
 	private String senha;
@@ -17,8 +14,9 @@ public class UsuarioDto {
 	private Boolean status;
 	private Long idEmpresa;
 	private Long idPerfil;
-	
+
 	public UsuarioDto(Usuario usuario) {
+		this.id = usuario.getId();
 		this.login = usuario.getLogin();
 		this.nome = usuario.getNome();
 		this.senha = usuario.getSenha();
@@ -65,10 +63,9 @@ public class UsuarioDto {
 	public Long getIdPerfil() {
 		return idPerfil;
 	}
-	
-	public static List<UsuarioDto> converter(List<Usuario> usuario){
-		
-		return usuario.stream().map(UsuarioDto::new).collect(Collectors.toList());
+
+	public Long getId() {
+		return id;
 	}
-	
+
 }

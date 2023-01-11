@@ -1,8 +1,6 @@
 package com.wms.api.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.wms.api.models.CategoriaGalpao;
 import com.wms.api.models.Produto;
@@ -43,8 +41,7 @@ public class ProdutoDto {
 	private Boolean usaDataValidade;
 	private Boolean usaDataFabricacao;
 	private Boolean situacao;
-	
-	
+
 	public ProdutoDto(Produto produto) {
 
 		this.id = produto.getId();
@@ -209,8 +206,4 @@ public class ProdutoDto {
 		return situacao;
 	}
 
-
-	public static List<ProdutoDto> converter(List<Produto> produto) {
-		return produto.stream().map(ProdutoDto::new).collect(Collectors.toList());
-	}
 }

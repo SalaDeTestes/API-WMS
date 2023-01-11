@@ -1,8 +1,6 @@
 package com.wms.api.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.wms.api.models.Cliente;
 
@@ -23,7 +21,7 @@ public class ClienteDto {
 	private LocalDateTime dataCadastro;
 	private LocalDateTime dataAtualizacao;
 	private Boolean situacao;
-	
+
 	public ClienteDto(Cliente cliente) {
 		this.id = cliente.getId();
 		this.descricaoRazaoSocial = cliente.getDescricaoRazaoSocial();
@@ -101,9 +99,5 @@ public class ClienteDto {
 	public Boolean getSituacao() {
 		return situacao;
 	}
-	
-public static List<ClienteDto> converter(List<Cliente> cliente){
-		
-		return cliente.stream().map(ClienteDto::new).collect(Collectors.toList());
-	}
+
 }

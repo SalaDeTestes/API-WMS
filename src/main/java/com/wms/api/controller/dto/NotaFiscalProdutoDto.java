@@ -2,8 +2,6 @@ package com.wms.api.controller.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
@@ -112,8 +110,4 @@ public class NotaFiscalProdutoDto {
 		return quantidadePalletProdutoConferido;
 	}
 
-	public static List<NotaFiscalProdutoDto> converter(List<NotaFiscalProduto> nfproduto) {
-
-		return nfproduto.stream().map(NotaFiscalProdutoDto::new).collect(Collectors.toList());
-	}
 }

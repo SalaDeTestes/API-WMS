@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
 
 import com.wms.api.models.Cliente;
 import com.wms.api.models.Motorista;
@@ -17,13 +14,13 @@ import com.wms.api.models.StatusNF;
 import com.wms.api.models.TipoCaminhao;
 import com.wms.api.models.TipoNotaEntrada;
 import com.wms.api.models.Transportadora;
-import com.wms.api.models.Usuario;
+
 
 public class NotaFiscalDto {
 
 	private Long id;
 	private Transportadora idTransportadora;
-	private Usuario idUsuario;
+	private Long idUsuario;
 	private StatusNF idStatusNF;
 	private String numeroNota;
 	private String numeroSerie;
@@ -47,7 +44,7 @@ public class NotaFiscalDto {
 	public NotaFiscalDto(NotaFiscal nf) {
 		this.id = nf.getId();
 		this.idTransportadora = nf.getIdTransportadora();
-		this.idUsuario = nf.getIdUsuario();
+		this.idUsuario = nf.getIdUsuario().getId();
 		this.numeroNota = nf.getNumeroNota();
 		this.numeroSerie = nf.getNumeroSerie();
 		this.dataEmissao = nf.getDataEmissao();
@@ -77,7 +74,7 @@ public class NotaFiscalDto {
 		return idTransportadora;
 	}
 
-	public Usuario getIdUsuario() {
+	public Long getIdUsuario() {
 		return idUsuario;
 	}
 
@@ -152,15 +149,9 @@ public class NotaFiscalDto {
 	public TipoCaminhao getIdTipoCaminhao() {
 		return idTipoCaminhao;
 	}
-	
 
 	public List<NotaFiscalProduto> getProdutos() {
 		return produtos;
-	}
-
-	public static List<NotaFiscalDto> converter(Page<NotaFiscal> nf) {
-
-		return nf.stream().map(NotaFiscalDto::new).collect(Collectors.toList());
 	}
 
 }

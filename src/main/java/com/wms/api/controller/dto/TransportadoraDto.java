@@ -1,8 +1,5 @@
 package com.wms.api.controller.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.wms.api.models.Transportadora;
 
 public class TransportadoraDto {
@@ -16,9 +13,9 @@ public class TransportadoraDto {
 	private String telefone;
 	private String email;
 	private String responsavel;
-	
+
 	public TransportadoraDto(Transportadora transportadora) {
-		
+
 		this.id = transportadora.getId();
 		this.razaoSocial = transportadora.getRazaoSocial();
 		this.cnpj = transportadora.getCnpj();
@@ -65,10 +62,5 @@ public class TransportadoraDto {
 	public String getResponsavel() {
 		return responsavel;
 	}
-	
-	public static List<TransportadoraDto> converter(List<Transportadora> transportadora){
-		
-		return transportadora.stream().map(TransportadoraDto::new).collect(Collectors.toList());
-	}
-	
+
 }

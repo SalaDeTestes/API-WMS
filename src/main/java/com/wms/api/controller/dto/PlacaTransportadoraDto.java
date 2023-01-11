@@ -1,8 +1,5 @@
 package com.wms.api.controller.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.wms.api.models.PlacaTransportadora;
 import com.wms.api.models.Transportadora;
 
@@ -37,8 +34,4 @@ public class PlacaTransportadoraDto {
 		return descricao;
 	}
 
-	public static List<PlacaTransportadoraDto> converter(List<PlacaTransportadora> placa) {
-
-		return placa.stream().map(PlacaTransportadoraDto::new).collect(Collectors.toList());
-	}
 }

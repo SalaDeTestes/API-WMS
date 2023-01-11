@@ -115,12 +115,13 @@ public class NotaFiscalController {
 	@PutMapping("/{id}")
 	@Transactional
 	@CachePut(value = "nfRepository")
-	public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form) {
+	public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form, NotaFiscalService service) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {
 			NotaFiscal nf = form.atualizar(id, transportadoraRepository, usuarioRepository, statusRepository,
 					nfRepository, clienteRepository, placaRepository, motoristaRepository, tipoRepository,
 					caminhaoRepository);
+			service.AtualizarItensDaNota(id, nf, nfProdutoRepository, nfRepository);
 			return ResponseEntity.ok(new NotaFiscalDto(nf));
 		}
 

@@ -274,27 +274,7 @@ public class NotaFiscalForm {
 			TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
-
-//		for (NotaFiscalProduto nfProduto : nf.getNotaFiscalProduto()) {
-//			nfProduto.setIdNotaFiscal(nf);
-//			nfProduto.setIdProduto(produtoRepository.getReferenceById(idProduto));
-//			nfProduto.setLote(lote);
-//			nfProduto.setQuantidadeProduto(quantidadeProduto);
-//			nfProduto.setEstoqueLiberado(estoqueLiberado);
-//			nfProduto.setEstoqueRetido(estoqueRetido);
-//			nfProduto.setQuantidadePalletsProduto(quantidadePalletsProduto);
-//			nfProduto.setQuantidadePalletsProdutoEstoque(quantidadePalletsProdutoEstoque);
-//			nfProduto.setValorUnitario(valorUnitario);
-//			nfProduto.setPesoUnitario(pesoUnitario);
-//			nfProduto.setDataFabricacao(dataFabricacao);
-//			nfProduto.setDataValidade(dataValidade);
-//			nfProduto.setQuantidadeUnidadeConferida(quantidadeUnidadeConferida);
-//			nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
-//			produtos.add(nfProduto);
-//
-//		}
 		
-		System.out.print(produtos);
 		
 		nf.setIdTransportadora(transportadoraRepository.getReferenceById(idTransportadora));
 		nf.setIdUsuario(usuarioRepository.getReferenceById(idUsuario));
@@ -315,6 +295,7 @@ public class NotaFiscalForm {
 		nf.setIdTipoEntrada(tipoRepository.getReferenceById(idTipoEntrada));
 		nf.setEntradaValidada(false);
 		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
+		nf.setNotaFiscalProduto(produtos);
 
 		return nf;
 	}
