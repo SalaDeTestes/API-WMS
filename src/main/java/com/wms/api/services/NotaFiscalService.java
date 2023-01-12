@@ -6,8 +6,10 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.wms.api.controller.dto.NotaFiscalDto;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
@@ -37,14 +39,21 @@ public class NotaFiscalService {
 		nfprodutoRepository.deleteAll(itens);
 	}
 
-	public void AtualizarItensDaNota(Long id, NotaFiscal nf, NotaFiscalProdutoRepository nfprodutoRepository,
-			NotaFiscalRepository nfRepository) {
+	public ResponseEntity<NotaFiscalDto> atualizacao(NotaFiscal nf) {
+		return ResponseEntity.ok(new NotaFiscalDto(nf));
+	}
+
+	public ResponseEntity<NotaFiscalDto> AtualizarItensDaNota(Long id, NotaFiscal nf,
+			NotaFiscalProdutoRepository nfprodutoRepository, NotaFiscalRepository nfRepository) {
 
 		Runnable salvaItemNota = () -> {
+
 			for (NotaFiscalProduto nfproduto : nf.getNotaFiscalProduto()) {
 				nfproduto.setIdNotaFiscal(nf);
 				nfprodutoRepository.save(nfproduto);
+				atualizacao(nf);
 			}
+
 		};
 
 		CyclicBarrier cyclicbarrier = new CyclicBarrier(1, salvaItemNota);
@@ -57,6 +66,14 @@ public class NotaFiscalService {
 
 		executor.submit(r1);
 		executor.shutdown();
+
+		while (executor.isTerminated() != true) {
+			if (executor.isTerminated()) {
+				return ResponseEntity.ok(new NotaFiscalDto(nf));
+			}
+		}
+
+		return ResponseEntity.ok(new NotaFiscalDto(nf));
 	}
 
 	private void await(CyclicBarrier cyclicbarrier) {

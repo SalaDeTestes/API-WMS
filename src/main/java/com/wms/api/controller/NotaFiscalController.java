@@ -8,10 +8,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -75,12 +76,16 @@ public class NotaFiscalController {
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "nfRepository")
-	public Page<NotaFiscalDto> listar(Pageable paginacao) {
+	public Page<NotaFiscalDto> listar(@PageableDefault(size = Integer.MAX_VALUE, direction = Direction.DESC, sort = {
+			"dataLancamento" }) Pageable paginacao) {
 		return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
 
 		// http://localhost:8080/notafiscal?size=10&page=3000
 		// size = quantidade de elemetos na pagina
 		// page = numero atual da pagina
+		// http://localhost:8080/notafiscal?size=20&sort=dataLancamento,desc
+		// sort = ordenação
+		// desc = tipo de ordenação
 	}
 
 	@PostMapping
@@ -114,15 +119,15 @@ public class NotaFiscalController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	@CachePut(value = "nfRepository")
-	public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form, NotaFiscalService service) {
+	@CacheEvict(value = "nfRepository", allEntries = true)
+	public ResponseEntity<NotaFiscalDto> atualizar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form,
+			NotaFiscalService service) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {
 			NotaFiscal nf = form.atualizar(id, transportadoraRepository, usuarioRepository, statusRepository,
 					nfRepository, clienteRepository, placaRepository, motoristaRepository, tipoRepository,
 					caminhaoRepository);
-			service.AtualizarItensDaNota(id, nf, nfProdutoRepository, nfRepository);
-			return ResponseEntity.ok(new NotaFiscalDto(nf));
+			return service.AtualizarItensDaNota(id, nf, nfProdutoRepository, nfRepository);
 		}
 
 		return ResponseEntity.notFound().build();
