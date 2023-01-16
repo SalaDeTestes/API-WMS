@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.wms.api.controller.dto.NotaFiscalDto;
@@ -33,6 +34,7 @@ public class NotaFiscalService {
 
 	}
 
+	@Async
 	public void deletar(Long id, NotaFiscalProdutoRepository nfprodutoRepository, NotaFiscalRepository nfRepository) {
 		List<NotaFiscalProduto> itens = nfprodutoRepository.findByIdNotaFiscal(nfRepository.getReferenceById(id));
 

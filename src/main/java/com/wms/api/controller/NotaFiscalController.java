@@ -1,6 +1,8 @@
 package com.wms.api.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,6 +41,7 @@ import com.wms.api.repository.TipoCaminhaoRepository;
 import com.wms.api.repository.TipoNotaEntradaRepository;
 import com.wms.api.repository.TransportadoraRepository;
 import com.wms.api.repository.UsuarioRepository;
+import com.wms.api.repository.filtros.FiltrosNFRepository;
 import com.wms.api.services.NotaFiscalService;
 
 @RestController
@@ -73,12 +78,32 @@ public class NotaFiscalController {
 	@Autowired
 	NotaFiscalProdutoRepository nfProdutoRepository;
 
+	@Autowired
+	FiltrosNFRepository filtrosRepository;
+
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "nfRepository")
-	public Page<NotaFiscalDto> listar(@PageableDefault(size = Integer.MAX_VALUE, direction = Direction.DESC, sort = {
-			"dataLancamento" }) Pageable paginacao) {
-		return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
+	public Page<NotaFiscalDto> listar(@RequestParam(required = false) String numeroNota,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataEmissaoInicio,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataEmissaoFim,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoInicio,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoFim,
+			@RequestParam(required = false) Long idTipo, @RequestParam(required = false) Long idStatusNF,
+			@RequestParam(required = false) Long idCliente,
+			@PageableDefault(direction = Direction.DESC, sort = { "dataLancamento" }) Pageable paginacao,
+			NotaFiscalService service) {
+
+		if (numeroNota == null && dataEmissaoInicio == null && dataEmissaoFim == null && dataLancamentoInicio == null
+				&& dataLancamentoFim == null && idTipo == null && idStatusNF == null && idCliente == null) {
+
+			return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
+		} else {
+
+			return filtrosRepository.filtro(numeroNota, dataEmissaoInicio, dataEmissaoFim, dataLancamentoInicio,
+					dataLancamentoFim, idTipo, idStatusNF, idCliente, paginacao).map(NotaFiscalDto::new);
+
+		}
 
 		// http://localhost:8080/notafiscal?size=10&page=3000
 		// size = quantidade de elemetos na pagina

@@ -223,25 +223,6 @@ public class EntradaNotaFiscalForm {
 
 		NotaFiscal nf = new NotaFiscal();
 
-//		for (NotaFiscalProduto nfProduto : nf.getNotaFiscalProduto()) {
-//			nfProduto.setIdNotaFiscal(nf);
-//			nfProduto.setIdProduto(produtos.get(produtos.size()).getIdProduto());
-//			nfProduto.setLote(produtos.get(produtos.hashCode()).getLote());
-//			nfProduto.setQuantidadeProduto(produtos.get(nfProduto.));
-//			nfProduto.setEstoqueLiberado(estoqueLiberado);
-//			nfProduto.setEstoqueRetido(estoqueRetido);
-//			nfProduto.setQuantidadePalletsProduto(quantidadePalletsProduto);
-//			nfProduto.setQuantidadePalletsProdutoEstoque(quantidadePalletsProdutoEstoque);
-//			nfProduto.setValorUnitario(valorUnitario);
-//			nfProduto.setPesoUnitario(pesoUnitario);
-//			nfProduto.setDataFabricacao(dataFabricacao);
-//			nfProduto.setDataValidade(dataValidade);
-//			nfProduto.setQuantidadeUnidadeConferida(quantidadeUnidadeConferida);
-//			nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
-//			produtos.add(nfProduto);
-//
-//		}
-
 		nf.setIdTransportadora(transportadoraRepository.getReferenceById(idTransportadora));
 		nf.setIdUsuario(usuarioRepository.getReferenceById(idUsuario));
 		nf.setIdStatusNF(statusRepository.getReferenceById(idStatusNF));
@@ -271,27 +252,6 @@ public class EntradaNotaFiscalForm {
 			TipoCaminhaoRepository caminhaoRepository,ProdutoRepository produtoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
-
-//		for (NotaFiscalProduto nfProduto : nf.getNotaFiscalProduto()) {
-//			nfProduto.setIdNotaFiscal(nf);
-//			nfProduto.setIdProduto(produtoRepository.getReferenceById(idProduto));
-//			nfProduto.setLote(lote);
-//			nfProduto.setQuantidadeProduto(quantidadeProduto);
-//			nfProduto.setEstoqueLiberado(estoqueLiberado);
-//			nfProduto.setEstoqueRetido(estoqueRetido);
-//			nfProduto.setQuantidadePalletsProduto(quantidadePalletsProduto);
-//			nfProduto.setQuantidadePalletsProdutoEstoque(quantidadePalletsProdutoEstoque);
-//			nfProduto.setValorUnitario(valorUnitario);
-//			nfProduto.setPesoUnitario(pesoUnitario);
-//			nfProduto.setDataFabricacao(dataFabricacao);
-//			nfProduto.setDataValidade(dataValidade);
-//			nfProduto.setQuantidadeUnidadeConferida(quantidadeUnidadeConferida);
-//			nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
-//			produtos.add(nfProduto);
-//
-//		}
-		
-		System.out.print(produtos);
 		
 		nf.setIdTransportadora(transportadoraRepository.getReferenceById(idTransportadora));
 		nf.setIdUsuario(usuarioRepository.getReferenceById(idUsuario));
