@@ -39,10 +39,10 @@ public class NotaFiscalProduto {
 	private Float quantidadeProduto;
 
 	@Column(name = "Qt_EstoqueLiberado")
-	private Float estoqueLiberado;
+	private Float estoqueLiberado = (float) 0;
 
 	@Column(name = "Qt_EstoqueRetido")
-	private Float estoqueRetido;
+	private Float estoqueRetido = (float) 0;
 
 	@Column(name = "Qt_Pallets")
 	private Float quantidadePalletsProduto;

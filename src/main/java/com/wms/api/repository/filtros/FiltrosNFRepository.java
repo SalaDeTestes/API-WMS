@@ -4,10 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Repository;
 
 import com.wms.api.models.NotaFiscal;
@@ -23,13 +26,24 @@ public class FiltrosNFRepository {
 
 	public Page<NotaFiscal> filtro(String numeroNota, LocalDate dataEmissaoInicio, LocalDate dataEmissaoFim,
 			LocalDateTime dataLancamentoInicio, LocalDateTime dataLancamentoFim, Long idTipo, Long idStatusNF,
-			Long idCliente, Pageable pageable) {
+			Long idCliente, Integer carga,
+			@PageableDefault(direction = Direction.DESC, sort = { "dataLancamento" }) Pageable pageable) {
 
 		String query = "Select N from NotaFiscal as N ";
 		String condicao = " where";
 
 		if (idTipo != null) {
-			query += condicao + " N.idTipo = :idTipo";
+			query += condicao + " N.idTipoEntrada.id = :idTipo";
+			condicao = " and ";
+		}
+
+		if (carga == 0) {
+			query += condicao + " N.numeroCarga is null";
+			condicao = " and ";
+		}
+
+		if (carga == 1) {
+			query += condicao + " N.numeroCarga is not null";
 			condicao = " and ";
 		}
 
@@ -39,12 +53,12 @@ public class FiltrosNFRepository {
 		}
 
 		if (idStatusNF != null) {
-			query += condicao + " N.idStatusNF = :idStatusNF";
+			query += condicao + " N.idStatusNF.id = :idStatusNF";
 			condicao = " and ";
 		}
 
 		if (idCliente != null) {
-			query += condicao + " N.idCliente = :idCliente";
+			query += condicao + " N.idCliente.id = :idCliente";
 			condicao = " and ";
 		}
 
@@ -58,7 +72,9 @@ public class FiltrosNFRepository {
 			condicao = " and ";
 		}
 
-		var q = em.createQuery(query, NotaFiscal.class);
+		query += " order by dataLancamento desc";
+
+		TypedQuery<NotaFiscal> q = em.createQuery(query, NotaFiscal.class);
 
 		if (idTipo != null) {
 			q.setParameter("idTipo", idTipo);

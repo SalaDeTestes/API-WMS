@@ -90,18 +90,19 @@ public class NotaFiscalController {
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoInicio,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoFim,
 			@RequestParam(required = false) Long idTipo, @RequestParam(required = false) Long idStatusNF,
-			@RequestParam(required = false) Long idCliente,
+			@RequestParam(required = false) Long idCliente, @RequestParam(required = false) Integer carga,
 			@PageableDefault(direction = Direction.DESC, sort = { "dataLancamento" }) Pageable paginacao,
 			NotaFiscalService service) {
 
 		if (numeroNota == null && dataEmissaoInicio == null && dataEmissaoFim == null && dataLancamentoInicio == null
-				&& dataLancamentoFim == null && idTipo == null && idStatusNF == null && idCliente == null) {
+				&& dataLancamentoFim == null && idTipo == null && idStatusNF == null && idCliente == null
+				&& carga == null) {
 
 			return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
 		} else {
 
 			return filtrosRepository.filtro(numeroNota, dataEmissaoInicio, dataEmissaoFim, dataLancamentoInicio,
-					dataLancamentoFim, idTipo, idStatusNF, idCliente, paginacao).map(NotaFiscalDto::new);
+					dataLancamentoFim, idTipo, idStatusNF, idCliente, carga, paginacao).map(NotaFiscalDto::new);
 
 		}
 
@@ -153,6 +154,19 @@ public class NotaFiscalController {
 					nfRepository, clienteRepository, placaRepository, motoristaRepository, tipoRepository,
 					caminhaoRepository);
 			return service.AtualizarItensDaNota(id, nf, nfProdutoRepository, nfRepository);
+		}
+
+		return ResponseEntity.notFound().build();
+	}
+
+	@PutMapping("/cancelar/{id}")
+	@Transactional
+	@CacheEvict(value = "nfRepository", allEntries = true)
+	public ResponseEntity<NotaFiscalDto> cancelar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form) {
+		Optional<NotaFiscal> optional = nfRepository.findById(id);
+		if (optional.isPresent()) {
+			NotaFiscal nf = form.cancelar(id, nfRepository, statusRepository, usuarioRepository);
+			return ResponseEntity.ok(new NotaFiscalDto(nf));
 		}
 
 		return ResponseEntity.notFound().build();

@@ -28,8 +28,8 @@ import com.wms.api.form.DocaForm;
 import com.wms.api.models.Doca;
 import com.wms.api.repository.DocaRepository;
 
-@RequestMapping("/doca")
 @RestController
+@RequestMapping("/doca")
 public class DocaController {
 
 	@Autowired
@@ -37,7 +37,7 @@ public class DocaController {
 
 	@GetMapping
 	@Transactional
-	@Cacheable(value = "statusRepository")
+	@Cacheable(value = "docaRepository")
 	public Page<DocaDto> lista(Pageable paginacao) {
 
 		return docaRepository.findAll(paginacao).map(DocaDto::new);
@@ -46,7 +46,7 @@ public class DocaController {
 
 	@PostMapping
 	@Transactional
-	@CacheEvict(value = "statusRepository", allEntries = true)
+	@CacheEvict(value = "docaRepository", allEntries = true)
 	public ResponseEntity<DocaDto> cadastrar(@RequestBody @Valid DocaForm form, UriComponentsBuilder uriBuilder) {
 
 		Doca status = form.formulario();
@@ -58,7 +58,7 @@ public class DocaController {
 
 	@GetMapping("/{id}")
 	@Transactional
-	@Cacheable(value = "statusRepository")
+	@Cacheable(value = "docaRepository")
 	public ResponseEntity<DocaDto> detalhar(@PathVariable Long id) {
 		Optional<Doca> pessoas = docaRepository.findById(id);
 		if (pessoas.isPresent()) {
@@ -70,7 +70,7 @@ public class DocaController {
 
 	@PutMapping("/{id}")
 	@Transactional
-	@CachePut(value = "statusRepository")
+	@CachePut(value = "docaRepository")
 	public ResponseEntity<DocaDto> atualizar(@PathVariable Long id, @RequestBody @Valid DocaForm form) {
 		Optional<Doca> optional = docaRepository.findById(id);
 		if (optional.isPresent()) {
@@ -83,7 +83,7 @@ public class DocaController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	@CacheEvict(value = "statusRepository", allEntries = true)
+	@CacheEvict(value = "docaRepository", allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<Doca> optional = docaRepository.findById(id);
 		if (optional.isPresent()) {

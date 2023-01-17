@@ -95,6 +95,13 @@ public class NotaFiscal {
 	@Column(name = "Ds_PlacaTransporte")
 	private String descricaoPlaca;
 
+	@Column(name = "ds_MotivoCancelamento")
+	private String motivoCancelamento;
+
+	@ManyToOne
+	@JoinColumn(name = "fk_Id_UsuarioCancelamento")
+	private Usuario idUsuarioCancelamento;
+
 	@OneToMany(mappedBy = "idNotaFiscal")
 	private List<NotaFiscalProduto> notaFiscalProduto = new ArrayList<>();
 
@@ -107,7 +114,7 @@ public class NotaFiscal {
 			Cliente idCliente, PlacaTransportadora idPlaca, Float pesoLiquido, Float pesoBruto,
 			LocalDateTime dataCancelamento, String numeroCarga, String descricaoPlaca, TipoNotaEntrada idTipoEntrada,
 			Motorista idMotorista, Boolean entradaValidada, TipoCaminhao idTipoCaminhao,
-			List<NotaFiscalProduto> notaFiscalProduto) {
+			List<NotaFiscalProduto> notaFiscalProduto, Usuario idUsuarioCancelamento, String motivoCancelamento) {
 		this.idTransportadora = idTransportadora;
 		this.idUsuario = idUsuario;
 		this.idStatusNF = idStatusNF;
@@ -129,6 +136,8 @@ public class NotaFiscal {
 		this.entradaValidada = entradaValidada;
 		this.idTipoCaminhao = idTipoCaminhao;
 		this.notaFiscalProduto = notaFiscalProduto;
+		this.idUsuarioCancelamento = idUsuarioCancelamento;
+		this.motivoCancelamento = motivoCancelamento;
 
 	}
 
@@ -294,6 +303,22 @@ public class NotaFiscal {
 
 	public TipoCaminhao getIdTipoCaminhao() {
 		return idTipoCaminhao;
+	}
+
+	public String getMotivoCancelamento() {
+		return motivoCancelamento;
+	}
+
+	public void setMotivoCancelamento(String motivoCancelamento) {
+		this.motivoCancelamento = motivoCancelamento;
+	}
+
+	public Usuario getIdUsuarioCancelamento() {
+		return idUsuarioCancelamento;
+	}
+
+	public void setIdUsuarioCancelamento(Usuario idUsuarioCancelamento) {
+		this.idUsuarioCancelamento = idUsuarioCancelamento;
 	}
 
 	public void setIdTipoCaminhao(TipoCaminhao idTipoCaminhao) {

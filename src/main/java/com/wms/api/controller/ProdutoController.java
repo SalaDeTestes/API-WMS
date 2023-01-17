@@ -53,7 +53,7 @@ public class ProdutoController {
 	@Transactional
 	@Cacheable(value = "produtoRepository")
 	public Page<ProdutoDto> listar(
-			@PageableDefault(direction = Direction.DESC, sort = { "descricao" }) Pageable paginacao) {
+			@PageableDefault(direction = Direction.ASC, sort = { "descricao" }) Pageable paginacao) {
 
 		return produtoRepository.findAll(paginacao).map(ProdutoDto::new);
 	}

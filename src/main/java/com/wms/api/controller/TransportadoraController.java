@@ -41,7 +41,7 @@ public class TransportadoraController {
 	@Transactional
 	@Cacheable(value = "transportadoraRepository")
 	public Page<TransportadoraDto> lista(
-			@PageableDefault(direction = Direction.DESC, sort = { "razaoSocial" }) Pageable paginacao) {
+			@PageableDefault(direction = Direction.ASC, sort = { "razaoSocial" }) Pageable paginacao) {
 
 		return transportadoraRepository.findAll(paginacao).map(TransportadoraDto::new);
 

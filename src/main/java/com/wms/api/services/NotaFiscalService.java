@@ -62,6 +62,7 @@ public class NotaFiscalService {
 
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 		Runnable r1 = () -> {
+
 			deletar(id, nfprodutoRepository, nfRepository);
 			await(cyclicbarrier);
 		};

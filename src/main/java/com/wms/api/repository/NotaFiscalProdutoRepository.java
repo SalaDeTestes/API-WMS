@@ -11,6 +11,4 @@ public interface NotaFiscalProdutoRepository extends JpaRepository<NotaFiscalPro
 
 	List<NotaFiscalProduto> findByIdNotaFiscal(NotaFiscal idNotaFiscal);
 
-	void deleteByidNotaFiscal(NotaFiscal idNotaFiscal);
-
 }

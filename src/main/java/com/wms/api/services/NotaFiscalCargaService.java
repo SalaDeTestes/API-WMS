@@ -1,5 +1,6 @@
 package com.wms.api.services;
 
+
 import org.springframework.stereotype.Service;
 
 import com.wms.api.form.NotaFiscalIncluirCargaForm;
@@ -15,8 +16,9 @@ import com.wms.api.repository.NotaFiscalRepository;
 public class NotaFiscalCargaService {
 
 	public void incluirCarga(NotaFiscalIncluirCargaForm form, NotaFiscalRepository nfRepository,
-			DocaRepository docaRepository, NotaFiscalCargaItensRepository cargaitensRepository, NotaFiscalCarga nfcarga) {
-		
+			DocaRepository docaRepository, NotaFiscalCargaItensRepository cargaitensRepository,
+			NotaFiscalCarga nfcarga) {
+
 		NotaFiscalCargaItens cargaItens = new NotaFiscalCargaItens();
 		cargaItens.setIdNotaFiscal(nfRepository.getReferenceById(form.getIdNotaFiscal()));
 		cargaItens.setIdNotaFiscalCarga(nfcarga);
@@ -26,12 +28,11 @@ public class NotaFiscalCargaService {
 		doca.setOcupada(true);
 		doca.setRecebimento(false);
 		doca.setNumeroCarga(Long.toString(cargaItens.getId()));
-		
-		
+
 		NotaFiscal nf = nfRepository.getReferenceById(form.getIdNotaFiscal());
 		nf.setNumeroCarga(Long.toString(cargaItens.getId()));
-		
-		//set [fg_Ocupada] = @0, [Nr_Carga] = @1, [fg_Recebimento] = @2
+
+		// set [fg_Ocupada] = @0, [Nr_Carga] = @1, [fg_Recebimento] = @2
 
 	}
 }

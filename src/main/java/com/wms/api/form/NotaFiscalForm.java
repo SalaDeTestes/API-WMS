@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.repository.ClienteRepository;
@@ -29,6 +28,7 @@ public class NotaFiscalForm {
 	private LocalDateTime dataLancamento;
 	private String observacao;
 	private String chaveNfe;
+	private String motivoCancelamento;
 	private Long idCliente;
 	private Long idPlaca;
 	private Float pesoLiquido;
@@ -41,8 +41,6 @@ public class NotaFiscalForm {
 	private Boolean entradaValidada;
 	private Long idTipoCaminhao;
 	private List<NotaFiscalProduto> produtos = new ArrayList<>();
-	
-	
 
 	public Integer getIdTransportadora() {
 		return idTransportadora;
@@ -211,8 +209,14 @@ public class NotaFiscalForm {
 	public void setProdutos(List<NotaFiscalProduto> produtos) {
 		this.produtos = produtos;
 	}
-	
 
+	public String getMotivoCancelamento() {
+		return motivoCancelamento;
+	}
+
+	public void setMotivoCancelamento(String motivoCancelamento) {
+		this.motivoCancelamento = motivoCancelamento;
+	}
 
 	public NotaFiscal formulario(TransportadoraRepository transportadoraRepository, UsuarioRepository usuarioRepository,
 			StatusNFRepository statusRepository, ClienteRepository clienteRepository,
@@ -220,25 +224,6 @@ public class NotaFiscalForm {
 			TipoNotaEntradaRepository tipoRepository, TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = new NotaFiscal();
-
-//		for (NotaFiscalProduto nfProduto : nf.getNotaFiscalProduto()) {
-//			nfProduto.setIdNotaFiscal(nf);
-//			nfProduto.setIdProduto(produtos.get(produtos.size()).getIdProduto());
-//			nfProduto.setLote(produtos.get(produtos.hashCode()).getLote());
-//			nfProduto.setQuantidadeProduto(produtos.get(nfProduto.));
-//			nfProduto.setEstoqueLiberado(estoqueLiberado);
-//			nfProduto.setEstoqueRetido(estoqueRetido);
-//			nfProduto.setQuantidadePalletsProduto(quantidadePalletsProduto);
-//			nfProduto.setQuantidadePalletsProdutoEstoque(quantidadePalletsProdutoEstoque);
-//			nfProduto.setValorUnitario(valorUnitario);
-//			nfProduto.setPesoUnitario(pesoUnitario);
-//			nfProduto.setDataFabricacao(dataFabricacao);
-//			nfProduto.setDataValidade(dataValidade);
-//			nfProduto.setQuantidadeUnidadeConferida(quantidadeUnidadeConferida);
-//			nfProduto.setQuantidadePalletProdutoConferido(quantidadePalletProdutoConferido);
-//			produtos.add(nfProduto);
-//
-//		}
 
 		nf.setIdTransportadora(transportadoraRepository.getReferenceById(idTransportadora));
 		nf.setIdUsuario(usuarioRepository.getReferenceById(idUsuario));
@@ -259,11 +244,9 @@ public class NotaFiscalForm {
 		nf.setEntradaValidada(false);
 		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
 		nf.setNotaFiscalProduto(produtos);
-		
 
-		
 		System.out.print("lote: " + produtos.get(0).getLote() + "  ");
-		
+
 		return nf;
 	}
 
@@ -274,13 +257,18 @@ public class NotaFiscalForm {
 			TipoCaminhaoRepository caminhaoRepository) {
 
 		NotaFiscal nf = nfRepository.getReferenceById(id);
-		
-		
+
+		// converter de string para tipo primitivo
+//		Integer.parseInt(string)
+//		Double.parseDouble(string)
+//		Float.parseFloat(string)
+//		Boolean.parseBoolean(string)
+
 		nf.setIdTransportadora(transportadoraRepository.getReferenceById(idTransportadora));
 		nf.setIdUsuario(usuarioRepository.getReferenceById(idUsuario));
 		nf.setIdStatusNF(statusRepository.getReferenceById(idStatusNF));
 		nf.setIdCliente(clienteRepository.getReferenceById(idCliente));
-		nf.setNumeroNota(numeroNota);
+		nf.setNumeroNota(numeroNota);// Integer.parseInt(numeroNota)
 		nf.setNumeroSerie(numeroSerie);
 		nf.setDataEmissao(dataEmissao);
 		nf.setObservacao(observacao);
@@ -296,6 +284,19 @@ public class NotaFiscalForm {
 		nf.setEntradaValidada(false);
 		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
 		nf.setNotaFiscalProduto(produtos);
+
+		return nf;
+	}
+
+	public NotaFiscal cancelar(Long id, NotaFiscalRepository nfRepository, StatusNFRepository statusRepository,
+			UsuarioRepository usuarioRepository) {
+
+		NotaFiscal nf = nfRepository.getReferenceById(id);
+
+		nf.setMotivoCancelamento(motivoCancelamento);
+		nf.setIdUsuarioCancelamento(usuarioRepository.getReferenceById(idUsuario));
+		nf.setDataCancelamento(LocalDateTime.now());
+		nf.setIdStatusNF(statusRepository.getReferenceById(idStatusNF));
 
 		return nf;
 	}

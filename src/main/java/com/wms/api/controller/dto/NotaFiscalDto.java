@@ -14,16 +14,18 @@ import com.wms.api.models.StatusNF;
 import com.wms.api.models.TipoCaminhao;
 import com.wms.api.models.TipoNotaEntrada;
 import com.wms.api.models.Transportadora;
-
+import com.wms.api.models.Usuario;
 
 public class NotaFiscalDto {
 
 	private Long id;
 	private Transportadora idTransportadora;
-	private Long idUsuario;
+	private Usuario idUsuario;
+	private Usuario idUsuarioCancelamento;
 	private StatusNF idStatusNF;
 	private String numeroNota;
 	private String numeroSerie;
+	private String motivoCancelamento;
 	private LocalDate dataEmissao;
 	private LocalDateTime dataLancamento;
 	private String observacao;
@@ -44,7 +46,7 @@ public class NotaFiscalDto {
 	public NotaFiscalDto(NotaFiscal nf) {
 		this.id = nf.getId();
 		this.idTransportadora = nf.getIdTransportadora();
-		this.idUsuario = nf.getIdUsuario().getId();
+		this.idUsuario = nf.getIdUsuario();
 		this.numeroNota = nf.getNumeroNota();
 		this.numeroSerie = nf.getNumeroSerie();
 		this.dataEmissao = nf.getDataEmissao();
@@ -64,6 +66,8 @@ public class NotaFiscalDto {
 		this.entradaValidada = nf.getEntradaValidada();
 		this.idTipoCaminhao = nf.getIdTipoCaminhao();
 		this.produtos = nf.getNotaFiscalProduto();
+		this.idUsuarioCancelamento = nf.getIdUsuarioCancelamento();
+		this.motivoCancelamento = nf.getMotivoCancelamento();
 	}
 
 	public Long getId() {
@@ -74,7 +78,7 @@ public class NotaFiscalDto {
 		return idTransportadora;
 	}
 
-	public Long getIdUsuario() {
+	public Usuario getIdUsuario() {
 		return idUsuario;
 	}
 
@@ -148,6 +152,14 @@ public class NotaFiscalDto {
 
 	public TipoCaminhao getIdTipoCaminhao() {
 		return idTipoCaminhao;
+	}
+
+	public Usuario getIdUsuarioCancelamento() {
+		return idUsuarioCancelamento;
+	}
+
+	public String getMotivoCancelamento() {
+		return motivoCancelamento;
 	}
 
 	public List<NotaFiscalProduto> getProdutos() {
