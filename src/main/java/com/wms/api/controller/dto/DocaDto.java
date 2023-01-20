@@ -4,6 +4,7 @@ import com.wms.api.models.Doca;
 
 public class DocaDto {
 
+	private Long id;
 	private Long idGalpao;
 	private String descricao;
 	private Boolean ocupada;
@@ -11,11 +12,16 @@ public class DocaDto {
 	private Boolean recebimento;
 
 	public DocaDto(Doca doca) {
-		this.idGalpao = doca.getId();
+		this.id = doca.getId();
+		this.idGalpao = doca.getIdGalpao();
 		this.descricao = doca.getDescricao();
 		this.ocupada = doca.getOcupada();
 		this.numeroCarga = doca.getNumeroCarga();
 		this.recebimento = doca.getRecebimento();
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public Long getIdGalpao() {

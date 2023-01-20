@@ -5,11 +5,11 @@ import com.wms.api.models.StatusNF;
 public class StatusNFDto {
 
 	private Long id;
-	private String descricao;
+	private String descricaoStatus;
 
 	public StatusNFDto(StatusNF status) {
 		this.id = status.getId();
-		this.descricao = status.getDescricaoStatus();
+		this.descricaoStatus = status.getDescricaoStatus();
 	}
 
 	public Long getId() {
@@ -17,7 +17,7 @@ public class StatusNFDto {
 	}
 
 	public String getDescricao() {
-		return descricao;
+		return descricaoStatus;
 	}
 
 }

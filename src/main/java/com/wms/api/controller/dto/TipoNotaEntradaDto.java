@@ -10,7 +10,7 @@ public class TipoNotaEntradaDto {
 	public TipoNotaEntradaDto(TipoNotaEntrada tipo) {
 
 		this.id = tipo.getId();
-		this.descricao = tipo.getDescricao();
+		this.descricao = tipo.getDescricao().toUpperCase();
 	}
 
 	public Long getId() {

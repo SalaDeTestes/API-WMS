@@ -66,7 +66,6 @@ public class NotaFiscalCargaController {
 
 		nfcargaRepository.save(nfcarga);
 		service.incluirCarga(form, nfRepository, docaRepository, cargaitensRepository, nfcarga);
-
 		URI uri = uriBuilder.path("/cargas/{id}").buildAndExpand(nfcarga.getId()).toUri();
 
 		return ResponseEntity.created(uri).body(new NotaFiscalCargaDto(nfcarga));

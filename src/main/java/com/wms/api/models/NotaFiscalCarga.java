@@ -31,7 +31,7 @@ public class NotaFiscalCarga {
 	private LocalDateTime dataFechamento = LocalDateTime.now();
 	
 	@Column(name = "fg_Fechado")
-	private Boolean fechado = false;
+	private Boolean fechado = true;
 
 	public NotaFiscalCarga() {
 

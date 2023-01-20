@@ -26,11 +26,11 @@ public class NotaFiscalCargaService {
 
 		Doca doca = docaRepository.getReferenceById(form.getIdDoca());
 		doca.setOcupada(true);
-		doca.setRecebimento(false);
-		doca.setNumeroCarga(Long.toString(cargaItens.getId()));
+		doca.setRecebimento(true);
+		doca.setNumeroCarga(Long.toString(nfcarga.getId()));
 
 		NotaFiscal nf = nfRepository.getReferenceById(form.getIdNotaFiscal());
-		nf.setNumeroCarga(Long.toString(cargaItens.getId()));
+		nf.setNumeroCarga(Long.toString(nfcarga.getId()));
 
 		// set [fg_Ocupada] = @0, [Nr_Carga] = @1, [fg_Recebimento] = @2
 
