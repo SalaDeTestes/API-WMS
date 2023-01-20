@@ -59,7 +59,7 @@ public class NotaFiscalCargaController {
 
 	@PostMapping
 	@Transactional
-	@CacheEvict(value = {"nfcargaRepository", "docaRepository"}, allEntries = true)
+	@CacheEvict(value = {"nfcargaRepository", "docaRepository", "nfRepository"}, allEntries = true)
 	public ResponseEntity<NotaFiscalCargaDto> cadastrar(@RequestBody @Valid NotaFiscalIncluirCargaForm form,
 			NotaFiscalCargaService service, UriComponentsBuilder uriBuilder) {
 		NotaFiscalCarga nfcarga = form.formularioNfCarga(docaRepository);

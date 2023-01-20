@@ -1,6 +1,5 @@
 package com.wms.api.services;
 
-
 import org.springframework.stereotype.Service;
 
 import com.wms.api.form.NotaFiscalIncluirCargaForm;
@@ -31,8 +30,6 @@ public class NotaFiscalCargaService {
 
 		NotaFiscal nf = nfRepository.getReferenceById(form.getIdNotaFiscal());
 		nf.setNumeroCarga(Long.toString(nfcarga.getId()));
-
-		// set [fg_Ocupada] = @0, [Nr_Carga] = @1, [fg_Recebimento] = @2
 
 	}
 }
