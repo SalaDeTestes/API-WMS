@@ -245,8 +245,6 @@ public class NotaFiscalForm {
 		nf.setIdTipoCaminhao(caminhaoRepository.getReferenceById(idTipoCaminhao));
 		nf.setNotaFiscalProduto(produtos);
 
-		System.out.print("lote: " + produtos.get(0).getLote() + "  ");
-
 		return nf;
 	}
 

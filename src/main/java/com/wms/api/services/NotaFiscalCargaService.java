@@ -30,6 +30,6 @@ public class NotaFiscalCargaService {
 
 		NotaFiscal nf = nfRepository.getReferenceById(form.getIdNotaFiscal());
 		nf.setNumeroCarga(Long.toString(nfcarga.getId()));
-
+		nf.setIdDoca(doca);
 	}
 }

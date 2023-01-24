@@ -61,9 +61,9 @@ public class StatusNFController {
 	@Transactional
 	@Cacheable(value = "statusRepository")
 	public ResponseEntity<StatusNFDto> detalhar(@PathVariable Long id) {
-		Optional<StatusNF> pessoas = statusRepository.findById(id);
-		if (pessoas.isPresent()) {
-			return ResponseEntity.ok(new StatusNFDto(pessoas.get()));
+		Optional<StatusNF> status = statusRepository.findById(id);
+		if (status.isPresent()) {
+			return ResponseEntity.ok(new StatusNFDto(status.get()));
 		}
 
 		return ResponseEntity.notFound().build();

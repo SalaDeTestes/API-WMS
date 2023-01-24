@@ -10,13 +10,14 @@ public class StatusNFDto {
 	public StatusNFDto(StatusNF status) {
 		this.id = status.getId();
 		this.descricaoStatus = status.getDescricaoStatus();
+
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public String getDescricao() {
+	public String getDescricaoStatus() {
 		return descricaoStatus;
 	}
 

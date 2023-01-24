@@ -29,14 +29,15 @@ public class ProdutoXCliente {
 	@JoinColumn(name = "fk_Id_Cliente")
 	private Cliente idCliente;
 
-	@Column(name = "fk_Id_Categoria")
-	private Long idCategoria;
+	@ManyToOne
+	@JoinColumn(name = "fk_Id_Categoria")
+	private CategoriaProduto idCategoria;
 
 	public ProdutoXCliente() {
 
 	}
 
-	public ProdutoXCliente(Cliente idCliente, Produto idProduto, Long idCategoria) {
+	public ProdutoXCliente(Cliente idCliente, Produto idProduto, CategoriaProduto idCategoria) {
 		this.idCliente = idCliente;
 		this.idProduto = idProduto;
 		this.idCategoria = idCategoria;
@@ -66,11 +67,11 @@ public class ProdutoXCliente {
 		this.idCliente = idCliente;
 	}
 
-	public Long getIdCategoria() {
+	public CategoriaProduto getIdCategoria() {
 		return idCategoria;
 	}
 
-	public void setIdCategoria(Long idCategoria) {
+	public void setIdCategoria(CategoriaProduto idCategoria) {
 		this.idCategoria = idCategoria;
 	}
 

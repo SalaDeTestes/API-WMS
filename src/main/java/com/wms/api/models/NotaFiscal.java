@@ -44,7 +44,7 @@ public class NotaFiscal {
 	private TipoCaminhao idTipoCaminhao;
 
 	@Column(name = "fg_EntValidada")
-	private Boolean entradaValidada;
+	private Boolean entradaValidada = false;
 
 	@ManyToOne
 	@JoinColumn(name = "fk_id_PlacaTransporte")
@@ -102,6 +102,10 @@ public class NotaFiscal {
 	@JoinColumn(name = "fk_Id_UsuarioCancelamento")
 	private Usuario idUsuarioCancelamento;
 
+	@ManyToOne
+	@JoinColumn(name = "fk_Id_Doca")
+	private Doca idDoca;
+
 	@OneToMany(mappedBy = "idNotaFiscal")
 	private List<NotaFiscalProduto> notaFiscalProduto = new ArrayList<>();
 
@@ -114,7 +118,8 @@ public class NotaFiscal {
 			Cliente idCliente, PlacaTransportadora idPlaca, Float pesoLiquido, Float pesoBruto,
 			LocalDateTime dataCancelamento, String numeroCarga, String descricaoPlaca, TipoNotaEntrada idTipoEntrada,
 			Motorista idMotorista, Boolean entradaValidada, TipoCaminhao idTipoCaminhao,
-			List<NotaFiscalProduto> notaFiscalProduto, Usuario idUsuarioCancelamento, String motivoCancelamento) {
+			List<NotaFiscalProduto> notaFiscalProduto, Usuario idUsuarioCancelamento, String motivoCancelamento,
+			Doca idDoca) {
 		this.idTransportadora = idTransportadora;
 		this.idUsuario = idUsuario;
 		this.idStatusNF = idStatusNF;
@@ -138,6 +143,7 @@ public class NotaFiscal {
 		this.notaFiscalProduto = notaFiscalProduto;
 		this.idUsuarioCancelamento = idUsuarioCancelamento;
 		this.motivoCancelamento = motivoCancelamento;
+		this.idDoca = idDoca;
 
 	}
 
@@ -187,6 +193,14 @@ public class NotaFiscal {
 
 	public void setNumeroSerie(String numeroSerie) {
 		this.numeroSerie = numeroSerie;
+	}
+
+	public Doca getIdDoca() {
+		return idDoca;
+	}
+
+	public void setIdDoca(Doca idDoca) {
+		this.idDoca = idDoca;
 	}
 
 	public LocalDate getDataEmissao() {

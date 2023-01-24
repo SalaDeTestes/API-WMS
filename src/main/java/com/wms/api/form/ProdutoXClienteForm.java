@@ -1,6 +1,7 @@
 package com.wms.api.form;
 
 import com.wms.api.models.ProdutoXCliente;
+import com.wms.api.repository.CategoriaProdutoRepository;
 import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.repository.ProdutoXClienteRepository;
@@ -31,11 +32,11 @@ public class ProdutoXClienteForm {
 		this.idCategoria = idCategoria;
 	}
 	
-	public ProdutoXCliente formulario(ClienteRepository clienteRepository, ProdutoRepository produtoRepository) {
+	public ProdutoXCliente formulario(ClienteRepository clienteRepository, ProdutoRepository produtoRepository, CategoriaProdutoRepository categoriaProdutoRepository) {
 		
 		ProdutoXCliente produtoCliente = new ProdutoXCliente();
 		
-		produtoCliente.setIdCategoria(idCategoria);
+		produtoCliente.setIdCategoria(categoriaProdutoRepository.getReferenceById(idCategoria));
 		produtoCliente.setIdCliente(clienteRepository.getReferenceById(idCliente));
 		produtoCliente.setIdProduto(produtoRepository.getReferenceById(idProduto));
 		
@@ -43,11 +44,11 @@ public class ProdutoXClienteForm {
 		
 	}
 	
-public ProdutoXCliente atualizar(Long id, ProdutoXClienteRepository produtoClienteRepository, ClienteRepository clienteRepository, ProdutoRepository produtoRepository) {
+public ProdutoXCliente atualizar(Long id, ProdutoXClienteRepository produtoClienteRepository, ClienteRepository clienteRepository, ProdutoRepository produtoRepository, CategoriaProdutoRepository categoriaProdutoRepository) {
 		
 		ProdutoXCliente produtoCliente = produtoClienteRepository.getReferenceById(id);
 		
-		produtoCliente.setIdCategoria(idCategoria);
+		produtoCliente.setIdCategoria(categoriaProdutoRepository.getReferenceById(idCategoria));
 		produtoCliente.setIdCliente(clienteRepository.getReferenceById(idCliente));
 		produtoCliente.setIdProduto(produtoRepository.getReferenceById(idProduto));
 		

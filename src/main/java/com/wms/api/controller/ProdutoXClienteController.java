@@ -28,6 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.wms.api.controller.dto.ProdutoXClienteDto;
 import com.wms.api.form.ProdutoXClienteForm;
 import com.wms.api.models.ProdutoXCliente;
+import com.wms.api.repository.CategoriaProdutoRepository;
 import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.repository.ProdutoXClienteRepository;
@@ -46,6 +47,9 @@ public class ProdutoXClienteController {
 
 	@Autowired
 	ProdutoRepository produtoRepository;
+	
+	@Autowired
+	CategoriaProdutoRepository categoriaProdutoRepository;
 
 	@GetMapping
 	@Transactional
@@ -61,7 +65,7 @@ public class ProdutoXClienteController {
 	@CacheEvict(value = "produtoClienteRepository", allEntries = true)
 	public ResponseEntity<ProdutoXClienteDto> cadastrar(@RequestBody @Valid ProdutoXClienteForm form,
 			UriComponentsBuilder uriBuilder) {
-		ProdutoXCliente produtoCliente = form.formulario(clienteRepository, produtoRepository);
+		ProdutoXCliente produtoCliente = form.formulario(clienteRepository, produtoRepository, categoriaProdutoRepository);
 
 		produtoClienteRepository.save(produtoCliente);
 
@@ -91,7 +95,7 @@ public class ProdutoXClienteController {
 		Optional<ProdutoXCliente> optional = produtoClienteRepository.findById(id);
 		if (optional.isPresent()) {
 			ProdutoXCliente produto = form.atualizar(id, produtoClienteRepository, clienteRepository,
-					produtoRepository);
+					produtoRepository, categoriaProdutoRepository);
 			return ResponseEntity.ok(new ProdutoXClienteDto(produto));
 		}
 

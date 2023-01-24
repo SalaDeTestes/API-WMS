@@ -1,5 +1,6 @@
 package com.wms.api.controller.dto;
 
+import com.wms.api.models.CategoriaProduto;
 import com.wms.api.models.Cliente;
 import com.wms.api.models.Produto;
 import com.wms.api.models.ProdutoXCliente;
@@ -9,7 +10,7 @@ public class ProdutoXClienteDto {
 	private Long id;
 	private Cliente idCliente;
 	private Produto idProduto;
-	private Long idCategoria;
+	private CategoriaProduto idCategoria;
 
 	public ProdutoXClienteDto(ProdutoXCliente produtoCliente) {
 		this.id = produtoCliente.getId();
@@ -30,7 +31,7 @@ public class ProdutoXClienteDto {
 		return idProduto;
 	}
 
-	public Long getIdCategoria() {
+	public CategoriaProduto getIdCategoria() {
 		return idCategoria;
 	}
 

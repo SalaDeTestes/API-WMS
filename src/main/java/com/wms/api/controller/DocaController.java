@@ -49,20 +49,20 @@ public class DocaController {
 	@CacheEvict(value = "docaRepository", allEntries = true)
 	public ResponseEntity<DocaDto> cadastrar(@RequestBody @Valid DocaForm form, UriComponentsBuilder uriBuilder) {
 
-		Doca status = form.formulario();
-		docaRepository.save(status);
+		Doca doca = form.formulario();
+		docaRepository.save(doca);
 
-		URI uri = uriBuilder.path("/doca/{id}").buildAndExpand(status.getId()).toUri();
-		return ResponseEntity.created(uri).body(new DocaDto(status));
+		URI uri = uriBuilder.path("/doca/{id}").buildAndExpand(doca.getId()).toUri();
+		return ResponseEntity.created(uri).body(new DocaDto(doca));
 	}
 
 	@GetMapping("/{id}")
 	@Transactional
 	@Cacheable(value = "docaRepository")
 	public ResponseEntity<DocaDto> detalhar(@PathVariable Long id) {
-		Optional<Doca> pessoas = docaRepository.findById(id);
-		if (pessoas.isPresent()) {
-			return ResponseEntity.ok(new DocaDto(pessoas.get()));
+		Optional<Doca> doca = docaRepository.findById(id);
+		if (doca.isPresent()) {
+			return ResponseEntity.ok(new DocaDto(doca.get()));
 		}
 
 		return ResponseEntity.notFound().build();
@@ -74,8 +74,8 @@ public class DocaController {
 	public ResponseEntity<DocaDto> atualizar(@PathVariable Long id, @RequestBody @Valid DocaForm form) {
 		Optional<Doca> optional = docaRepository.findById(id);
 		if (optional.isPresent()) {
-			Doca status = form.atualizar(id, docaRepository);
-			return ResponseEntity.ok(new DocaDto(status));
+			Doca doca = form.atualizar(id, docaRepository);
+			return ResponseEntity.ok(new DocaDto(doca));
 		}
 
 		return ResponseEntity.notFound().build();

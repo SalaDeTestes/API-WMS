@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wms.api.models.Cliente;
+import com.wms.api.models.Doca;
 import com.wms.api.models.Motorista;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
@@ -41,6 +42,7 @@ public class NotaFiscalDto {
 	private Motorista idMotorista;
 	private Boolean entradaValidada;
 	private TipoCaminhao idTipoCaminhao;
+	private Doca idDoca;
 	private List<NotaFiscalProduto> produtos = new ArrayList<>();
 
 	public NotaFiscalDto(NotaFiscal nf) {
@@ -68,6 +70,7 @@ public class NotaFiscalDto {
 		this.produtos = nf.getNotaFiscalProduto();
 		this.idUsuarioCancelamento = nf.getIdUsuarioCancelamento();
 		this.motivoCancelamento = nf.getMotivoCancelamento();
+		this.idDoca = nf.getIdDoca();
 	}
 
 	public Long getId() {
@@ -104,6 +107,10 @@ public class NotaFiscalDto {
 
 	public String getObservacao() {
 		return observacao;
+	}
+
+	public Doca getIdDoca() {
+		return idDoca;
 	}
 
 	public String getChaveNfe() {
