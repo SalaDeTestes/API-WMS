@@ -6,8 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -17,10 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ControleEntradaProdutoPorPosicao {
 
-	@Id@GeneratedValue
+	@Id
+	@GeneratedValue
 	private Long id;
-	
-	
+
 	@Column(name = "fk_Id_ControleEntrada")
 	private Long idNotaFiscal;
 
@@ -59,7 +57,7 @@ public class ControleEntradaProdutoPorPosicao {
 
 	@Column(name = "fk_Id_StatusMov")
 	private Long idStatusMovimentacao;
-	
+
 	@Column(name = "fk_Id_Usuario")
 	private Long idUsuario;
 
@@ -73,10 +71,10 @@ public class ControleEntradaProdutoPorPosicao {
 
 	}
 
-	public ControleEntradaProdutoPorPosicao(Long idNotaFiscal, Long idProduto, String lote, Long idGalpao,
-			Long idBloco, Long idPosicao, Long idNivel, Long idRua, Float quantidade, Integer quatidadePallets,
-			Long idEtiqueta, Long idMotivoRetido, Long idStatusMovimentacao, Long idUsuario,
-			Integer numeroSaidasEmAberto, Boolean reserva) {
+	public ControleEntradaProdutoPorPosicao(Long idNotaFiscal, Long idProduto, String lote, Long idGalpao, Long idBloco,
+			Long idPosicao, Long idNivel, Long idRua, Float quantidade, Integer quatidadePallets, Long idEtiqueta,
+			Long idMotivoRetido, Long idStatusMovimentacao, Long idUsuario, Integer numeroSaidasEmAberto,
+			Boolean reserva) {
 
 		this.idNotaFiscal = idNotaFiscal;
 		this.idProduto = idProduto;

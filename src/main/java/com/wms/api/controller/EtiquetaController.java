@@ -26,7 +26,7 @@ import com.wms.api.models.Etiqueta;
 import com.wms.api.repository.EtiquetaRepository;
 
 @RestController
-@RequestMapping("etiqueta")
+@RequestMapping("/etiqueta")
 public class EtiquetaController {
 
 	@Autowired

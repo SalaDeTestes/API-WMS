@@ -24,13 +24,13 @@ public class ControleConferencia {
 	private Long id;
 
 	@Column(name = "pk_Id_Revisao")
-	private Long revisao;
+	private Long revisao = (long) 1;
 
 	@Column(name = "fk_Id_Usuario")
 	private Long idUsuario;
 
 	@Column(name = "fk_Id_Equipamento")
-	private Long idEquipamento;
+	private Long idEquipamento = (long) 1;
 
 	@Column(name = "Nr_Carga")
 	private String numeroCarga;

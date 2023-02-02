@@ -44,7 +44,7 @@ public class ControleEntradaProdutoConferencia {
 	private Integer quantidadePalletConferida;
 
 	@Column(name = "id_liberado_retido")
-	private char idLiberadoRetido;
+	private char idLiberadoRetido = 'L';
 
 	public ControleEntradaProdutoConferencia() {
 

@@ -5,8 +5,6 @@ package com.wms.api.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,21 +18,20 @@ public class ControleEntradaProdutoEtiqueta {
 	@Column(name = "pk_Id_Etiqueta")
 	private Long idEtiqueta;
 
-	@ManyToOne
-	@JoinColumn(name = "fk_Id_ControleEntrada")
-	private NotaFiscal idNotaFiscal;
+	@Column(name = "fk_Id_ControleEntrada")
+	private Long idNotaFiscal;
 
 	@Column(name = "Ds_Etiqueta")
-	private String descicaoEtiqueta;
+	private String descricaoEtiqueta;
 
 	public ControleEntradaProdutoEtiqueta() {
 
 	}
 
-	public ControleEntradaProdutoEtiqueta(Long idEtiqueta, NotaFiscal idNotaFiscal, String descicaoEtiqueta) {
+	public ControleEntradaProdutoEtiqueta(Long idEtiqueta, Long idNotaFiscal, String descricaoEtiqueta) {
 		this.idEtiqueta = idEtiqueta;
 		this.idNotaFiscal = idNotaFiscal;
-		this.descicaoEtiqueta = descicaoEtiqueta;
+		this.descricaoEtiqueta = descricaoEtiqueta;
 	}
 
 	public Long getIdEtiqueta() {
@@ -45,20 +42,20 @@ public class ControleEntradaProdutoEtiqueta {
 		this.idEtiqueta = idEtiqueta;
 	}
 
-	public NotaFiscal getIdNotaFiscal() {
+	public Long getIdNotaFiscal() {
 		return idNotaFiscal;
 	}
 
-	public void setIdNotaFiscal(NotaFiscal idNotaFiscal) {
+	public void setIdNotaFiscal(Long idNotaFiscal) {
 		this.idNotaFiscal = idNotaFiscal;
 	}
 
-	public String getDescicaoEtiqueta() {
-		return descicaoEtiqueta;
+	public String getDescricaoEtiqueta() {
+		return descricaoEtiqueta;
 	}
 
-	public void setDescicaoEtiqueta(String descicaoEtiqueta) {
-		this.descicaoEtiqueta = descicaoEtiqueta;
+	public void setDescricaoEtiqueta(String descricaoEtiqueta) {
+		this.descricaoEtiqueta = descricaoEtiqueta;
 	}
 
 }

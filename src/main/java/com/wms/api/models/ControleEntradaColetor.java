@@ -41,7 +41,7 @@ public class ControleEntradaColetor {
 	private Long idEtiqueta;
 
 	@Column(name = "Ds_EtiquetaAT_Aux")
-	private String descricaoEtique;
+	private String descricaoEtiqueta;
 
 	@Column(name = "Nr_NotaFiscal")
 	private String numeroNota;
@@ -65,7 +65,7 @@ public class ControleEntradaColetor {
 	private LocalDate dataFabricacao;
 
 	@Column(name = "fk_Id_TpPallet")
-	private Long idTipoPallet;
+	private Long idTipoPallet = (long) 1;
 
 	@Column(name = "Nr_Peso")
 	private Float peso;
@@ -93,7 +93,7 @@ public class ControleEntradaColetor {
 	}
 
 	public ControleEntradaColetor(Long revisao, Long idNotaFiscal, Long idProduto, String lote, Long idEtiqueta,
-			String descricaoEtique, String numeroNota, String numeroCarga, Long idDoca, Float quantidade,
+			String descricaoEtiqueta, String numeroNota, String numeroCarga, Long idDoca, Float quantidade,
 			LocalDate dataValidade, LocalDateTime dataCadastro, LocalDate dataFabricacao, Long idTipoPallet, Float peso,
 			Integer numeroPallet, Long idUsuario, Boolean avaria, Boolean devolucao, Boolean repal, Boolean strech) {
 
@@ -102,7 +102,7 @@ public class ControleEntradaColetor {
 		this.idProduto = idProduto;
 		this.lote = lote;
 		this.idEtiqueta = idEtiqueta;
-		this.descricaoEtique = descricaoEtique;
+		this.descricaoEtiqueta = descricaoEtiqueta;
 		this.numeroNota = numeroNota;
 		this.numeroCarga = numeroCarga;
 		this.idDoca = idDoca;
@@ -168,12 +168,12 @@ public class ControleEntradaColetor {
 		this.idEtiqueta = idEtiqueta;
 	}
 
-	public String getDescricaoEtique() {
-		return descricaoEtique;
+	public String getDescricaoEtiqueta() {
+		return descricaoEtiqueta;
 	}
 
-	public void setDescricaoEtique(String descricaoEtique) {
-		this.descricaoEtique = descricaoEtique;
+	public void setDescricaoEtiqueta(String descricaoEtiqueta) {
+		this.descricaoEtiqueta = descricaoEtiqueta;
 	}
 
 	public String getNumeroNota() {

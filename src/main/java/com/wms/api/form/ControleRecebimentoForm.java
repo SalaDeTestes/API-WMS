@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wms.api.models.ControleEntradaColetor;
+import com.wms.api.models.ControleEntradaProdutoConferencia;
 import com.wms.api.models.ControleRecebimento;
 
 public class ControleRecebimentoForm {
@@ -16,6 +17,7 @@ public class ControleRecebimentoForm {
 	private LocalDateTime dataInicio;
 	private LocalDateTime dataFim;
 	private List<ControleEntradaColetor> controleEntradaColetor = new ArrayList<>();
+	private List<ControleEntradaProdutoConferencia> controleEntradaProdutoConferencia = new ArrayList<>();
 
 	public Long getIdUsuario() {
 		return idUsuario;
@@ -73,6 +75,15 @@ public class ControleRecebimentoForm {
 		this.controleEntradaColetor = controleEntradaColetor;
 	}
 
+	public List<ControleEntradaProdutoConferencia> getControleEntradaProdutoConferencia() {
+		return controleEntradaProdutoConferencia;
+	}
+
+	public void setControleEntradaProdutoConferencia(
+			List<ControleEntradaProdutoConferencia> controleEntradaProdutoConferencia) {
+		this.controleEntradaProdutoConferencia = controleEntradaProdutoConferencia;
+	}
+
 	public ControleRecebimento formulario() {
 		ControleRecebimento controleRecebimento = new ControleRecebimento();
 
@@ -83,6 +94,7 @@ public class ControleRecebimentoForm {
 		controleRecebimento.setDataInicio(dataInicio);
 		controleRecebimento.setDataFim(dataFim);
 		controleRecebimento.setControleEntradaColetor(controleEntradaColetor);
+		controleRecebimento.setControleEntradaProdutoConferencia(controleEntradaProdutoConferencia);
 
 		return controleRecebimento;
 	}

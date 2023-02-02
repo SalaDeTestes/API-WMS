@@ -30,7 +30,7 @@ public class ControleRecebimento {
 	private Long idUsuario;
 
 	@Column(name = "fk_Id_Equipamento")
-	private Long idEquipamento;
+	private Long idEquipamento = (long) 1;
 
 	@Column(name = "Nr_Carga")
 	private String numeroCarga;
@@ -42,17 +42,21 @@ public class ControleRecebimento {
 	private LocalDateTime dataInicio;
 
 	@Column(name = "Dt_Hora_fim")
-	private LocalDateTime dataFim;
+	private LocalDateTime dataFim = LocalDateTime.now();
 
 	@OneToMany(mappedBy = "numeroCarga")
 	private List<ControleEntradaColetor> controleEntradaColetor = new ArrayList<>();
+
+	@OneToMany(mappedBy = "idNotaFiscal")
+	private List<ControleEntradaProdutoConferencia> controleEntradaProdutoConferencia = new ArrayList<>();
 
 	public ControleRecebimento() {
 
 	}
 
 	public ControleRecebimento(Long idUsuario, Long idEquipamento, String numeroCarga, Long idDoca,
-			LocalDateTime dataInicio, LocalDateTime dataFim, List<ControleEntradaColetor> controleEntradaColetor) {
+			LocalDateTime dataInicio, LocalDateTime dataFim, List<ControleEntradaColetor> controleEntradaColetor,
+			List<ControleEntradaProdutoConferencia> controleEntradaProdutoConferencia) {
 
 		this.idUsuario = idUsuario;
 		this.idEquipamento = idEquipamento;
@@ -61,6 +65,7 @@ public class ControleRecebimento {
 		this.dataInicio = dataInicio;
 		this.dataFim = dataFim;
 		this.controleEntradaColetor = controleEntradaColetor;
+		this.controleEntradaProdutoConferencia = controleEntradaProdutoConferencia;
 	}
 
 	public Long getId() {
@@ -125,6 +130,15 @@ public class ControleRecebimento {
 
 	public void setControleEntradaColetor(List<ControleEntradaColetor> controleEntradaColetor) {
 		this.controleEntradaColetor = controleEntradaColetor;
+	}
+
+	public List<ControleEntradaProdutoConferencia> getControleEntradaProdutoConferencia() {
+		return controleEntradaProdutoConferencia;
+	}
+
+	public void setControleEntradaProdutoConferencia(
+			List<ControleEntradaProdutoConferencia> controleEntradaProdutoConferencia) {
+		this.controleEntradaProdutoConferencia = controleEntradaProdutoConferencia;
 	}
 
 }

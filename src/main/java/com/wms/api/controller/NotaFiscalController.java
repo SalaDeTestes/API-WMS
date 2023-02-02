@@ -90,19 +90,18 @@ public class NotaFiscalController {
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoInicio,
 			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataLancamentoFim,
 			@RequestParam(required = false) Long idTipo, @RequestParam(required = false) Long idStatusNF,
-			@RequestParam(required = false) Long idCliente, @RequestParam(required = false) Integer carga,
+			@RequestParam(required = false) Long idCliente,
 			@PageableDefault(direction = Direction.DESC, sort = { "dataLancamento" }) Pageable paginacao,
 			NotaFiscalService service) {
 
 		if (numeroNota == null && dataEmissaoInicio == null && dataEmissaoFim == null && dataLancamentoInicio == null
-				&& dataLancamentoFim == null && idTipo == null && idStatusNF == null && idCliente == null
-				&& carga == null) {
+				&& dataLancamentoFim == null && idTipo == null && idStatusNF == null && idCliente == null) {
 
 			return nfRepository.findAll(paginacao).map(NotaFiscalDto::new);
 		} else {
 
 			return filtrosRepository.filtro(numeroNota, dataEmissaoInicio, dataEmissaoFim, dataLancamentoInicio,
-					dataLancamentoFim, idTipo, idStatusNF, idCliente, carga, paginacao).map(NotaFiscalDto::new);
+					dataLancamentoFim, idTipo, idStatusNF, idCliente, paginacao).map(NotaFiscalDto::new);
 
 		}
 
@@ -116,7 +115,7 @@ public class NotaFiscalController {
 
 	@PostMapping
 	@Transactional
-	@CacheEvict(value = "nfRepository", allEntries = true)
+	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
 	public ResponseEntity<NotaFiscalDto> cadastrar(@RequestBody @Valid NotaFiscalForm form, NotaFiscalService service,
 			UriComponentsBuilder uriBuilder) {
 		NotaFiscal nf = form.formulario(transportadoraRepository, usuarioRepository, statusRepository,
@@ -161,7 +160,7 @@ public class NotaFiscalController {
 
 	@PutMapping("/cancelar/{id}")
 	@Transactional
-	@CacheEvict(value = "nfRepository", allEntries = true)
+	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
 	public ResponseEntity<NotaFiscalDto> cancelar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {
@@ -174,7 +173,7 @@ public class NotaFiscalController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	@CacheEvict(value = "nfRepository", allEntries = true)
+	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {

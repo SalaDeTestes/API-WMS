@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +25,10 @@ public class FiltrosNFRepository {
 		this.em = em;
 	}
 
+	@Cacheable(value = "q")
 	public Page<NotaFiscal> filtro(String numeroNota, LocalDate dataEmissaoInicio, LocalDate dataEmissaoFim,
 			LocalDateTime dataLancamentoInicio, LocalDateTime dataLancamentoFim, Long idTipo, Long idStatusNF,
-			Long idCliente, Integer carga,
+			Long idCliente,
 			@PageableDefault(direction = Direction.DESC, sort = { "dataLancamento" }) Pageable pageable) {
 
 		String query = "Select N from NotaFiscal as N ";
@@ -34,16 +36,6 @@ public class FiltrosNFRepository {
 
 		if (idTipo != null) {
 			query += condicao + " N.idTipoEntrada.id = :idTipo";
-			condicao = " and ";
-		}
-
-		if (carga == 0) {
-			query += condicao + " N.numeroCarga is null";
-			condicao = " and ";
-		}
-
-		if (carga == 1) {
-			query += condicao + " N.numeroCarga is not null";
 			condicao = " and ";
 		}
 
