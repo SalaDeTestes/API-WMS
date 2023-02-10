@@ -1,8 +1,12 @@
 package com.wms.api.controller;
 
+import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +22,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.itextpdf.text.DocumentException;
 import com.wms.api.controller.dto.EtiquetaDto;
 import com.wms.api.models.Etiqueta;
 import com.wms.api.repository.EtiquetaRepository;
+import com.wms.api.util.PdfGeneratorEtiqueta;
 
 @RestController
 @RequestMapping("/etiqueta")
@@ -39,6 +46,20 @@ public class EtiquetaController {
 
 		return etiquetaRepository.findAll(paginacao).map(EtiquetaDto::new);
 
+	}
+
+	@GetMapping("/pdf")
+	@Transactional
+	public void generatePdfFile(@RequestParam int quantidadeEtiqueta,HttpServletResponse response) throws DocumentException, IOException {
+		response.setContentType("application/pdf");
+		LocalDateTime now = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		String headerkey = "Content-Disposition";
+		String headervalue = "attachment; filename=Etiquetas_" + now.format(formatter) + ".pdf";
+		response.setHeader(headerkey, headervalue);
+
+		PdfGeneratorEtiqueta generator = new PdfGeneratorEtiqueta();
+		generator.GerarEtiquetaPDF(response, quantidadeEtiqueta, etiquetaRepository);
 	}
 
 	@PostMapping

@@ -30,6 +30,8 @@ import com.wms.api.repository.ControleEntradaProdutoConferenciaRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.ControleRecebimentoRepository;
+import com.wms.api.repository.DocaRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 
 import com.wms.api.services.ControleRecebimentoService;
@@ -64,6 +66,13 @@ public class TarefaRecebimentoController {
 
 	@Autowired
 	private ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository;
+	
+	@Autowired
+	private NotaFiscalProdutoRepository nfprodutoRepository;
+	
+	@Autowired
+	private DocaRepository docaRepository;
+
 
 	@GetMapping
 	@Transactional
@@ -93,7 +102,7 @@ public class TarefaRecebimentoController {
 		service.salvarRecebimento(controleRecebimento, controleRecebimentoRepository, controleEntradaColetorRepository,
 				controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
-				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository);
+				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository, nfprodutoRepository, docaRepository);
 
 		controleRecebimentoRepository.save(controleRecebimento);
 

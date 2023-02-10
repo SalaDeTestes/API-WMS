@@ -1,5 +1,7 @@
 package com.wms.api.services;
 
+import org.springframework.cache.annotation.CacheEvict;
+
 import com.wms.api.models.ControleConferencia;
 import com.wms.api.models.ControleEntradaColetor;
 import com.wms.api.models.ControleEntradaColetorStatus;
@@ -8,6 +10,9 @@ import com.wms.api.models.ControleEntradaProdutoConferencia;
 import com.wms.api.models.ControleEntradaProdutoEtiqueta;
 import com.wms.api.models.ControleEntradaProdutoPorPosicao;
 import com.wms.api.models.ControleRecebimento;
+import com.wms.api.models.Doca;
+import com.wms.api.models.NotaFiscal;
+import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.repository.ControleConferenciaRepository;
 import com.wms.api.repository.ControleEntradaColetorRepository;
 import com.wms.api.repository.ControleEntradaColetorStatusRepository;
@@ -16,8 +21,11 @@ import com.wms.api.repository.ControleEntradaProdutoConferenciaRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.ControleRecebimentoRepository;
+import com.wms.api.repository.DocaRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 
+@CacheEvict(value = "controleRecebimentoRepository", allEntries = true)
 public class ControleRecebimentoService {
 
 	public void salvarRecebimentoProdutoQuantidadeParcial(ControleRecebimento controleRecebimento,
@@ -29,7 +37,15 @@ public class ControleRecebimentoService {
 			ControleEntradaProdutoEtiquetaRepository controleEntradaProdutoEtiquetaRepository,
 			ControleConferenciaRepository controleConferenciaRepository,
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
-			NotaFiscalRepository nfRepository) {
+			NotaFiscalRepository nfRepository, DocaRepository docaRepository) {
+		
+//		Doca doca = docaRepository.getReferenceById(controleRecebimento.getIdDoca());
+//		doca.setOcupada(false);
+//		doca.setNumeroCarga("0");
+//		doca.setRecebimento(false);
+
+		NotaFiscal nf = nfRepository.findByNumeroCarga(controleRecebimento.getNumeroCarga());
+		nf.setEntradaValidada(true);
 
 		ControleConferencia controleConferencia = new ControleConferencia();
 		controleConferencia.setIdDoca(controleRecebimento.getIdDoca());
@@ -75,7 +91,7 @@ public class ControleRecebimentoService {
 	public void salvarRecebimentoTotal(ControleRecebimento controleRecebimento,
 			ControleEntradaProdutoConferenciaRepository controleEntradaProdutoConferenciaRepository,
 			NotaFiscalRepository nfRepository,
-			ControleEntradaProdutoPorPosicaoRepository controleEntradaProdutoPorPosicaoRepository) {
+			ControleEntradaProdutoPorPosicaoRepository controleEntradaProdutoPorPosicaoRepository, NotaFiscalProdutoRepository nfprodutoRepository) {
 
 		for (ControleEntradaProdutoConferencia listControleEntradaProdutoConferencia : controleRecebimento
 				.getControleEntradaProdutoConferencia()) {
@@ -95,7 +111,9 @@ public class ControleRecebimentoService {
 			controleEntradaProdutoPorPosicao.setIdUsuario(controleRecebimento.getIdUsuario());
 
 			controleEntradaProdutoPorPosicaoRepository.save(controleEntradaProdutoPorPosicao);
-
+			
+			NotaFiscalProduto nfproduto = nfprodutoRepository.findByIdNotaFiscal_idAndIdProduto_id(listControleEntradaProdutoConferencia.getIdNotaFiscal(), listControleEntradaProdutoConferencia.getIdProduto());
+			nfproduto.setLote(listControleEntradaProdutoConferencia.getLote());
 		}
 	}
 
@@ -108,13 +126,13 @@ public class ControleRecebimentoService {
 			ControleEntradaProdutoEtiquetaRepository controleEntradaProdutoEtiquetaRepository,
 			ControleConferenciaRepository controleConferenciaRepository,
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
-			NotaFiscalRepository nfRepository) {
+			NotaFiscalRepository nfRepository, NotaFiscalProdutoRepository nfprodutoRepository, DocaRepository docaRepository) {
 		salvarRecebimentoProdutoQuantidadeParcial(controleRecebimento, controleRecebimentoRepository,
 				entradaColetorRepository, controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
-				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository);
+				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository, docaRepository);
 		salvarRecebimentoTotal(controleRecebimento, controleEntradaProdutoConferenciaRepository, nfRepository,
-				controleEntradaProdutoPorPosicaoRepository);
+				controleEntradaProdutoPorPosicaoRepository, nfprodutoRepository);
 	}
 
 }

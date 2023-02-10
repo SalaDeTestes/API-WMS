@@ -11,6 +11,6 @@ public interface NotaFiscalRepository extends JpaRepository<NotaFiscal, Long> {
 	Page<NotaFiscal> findByEntradaValidadaAndIdStatusNF_IdNotAndNumeroCargaNotNull(boolean b, long l,
 			Pageable paginacao);
 
-	Long findByNumeroCarga(String numeroCarga);
+	NotaFiscal findByNumeroCarga(String numeroCarga);
 
 }
