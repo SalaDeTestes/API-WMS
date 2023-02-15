@@ -31,9 +31,9 @@ import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.ControleRecebimentoRepository;
 import com.wms.api.repository.DocaRepository;
+import com.wms.api.repository.EtiquetaRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
-
 import com.wms.api.services.ControleRecebimentoService;
 
 @RestController
@@ -66,13 +66,15 @@ public class TarefaRecebimentoController {
 
 	@Autowired
 	private ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository;
-	
+
 	@Autowired
 	private NotaFiscalProdutoRepository nfprodutoRepository;
-	
+
 	@Autowired
 	private DocaRepository docaRepository;
 
+	@Autowired
+	private EtiquetaRepository etiquetaRepository;
 
 	@GetMapping
 	@Transactional
@@ -102,13 +104,14 @@ public class TarefaRecebimentoController {
 		service.salvarRecebimento(controleRecebimento, controleRecebimentoRepository, controleEntradaColetorRepository,
 				controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
-				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository, nfprodutoRepository, docaRepository);
+				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository,
+				nfprodutoRepository, docaRepository, etiquetaRepository);
 
 		controleRecebimentoRepository.save(controleRecebimento);
 
 		URI uri = uriBuilder.path("/tarefasrecebimento/{id}").buildAndExpand(controleRecebimento.getId()).toUri();
 		return ResponseEntity.created(uri).body(new ControleRecebimentoDto(controleRecebimento));
-	}
 
+	}
 
 }

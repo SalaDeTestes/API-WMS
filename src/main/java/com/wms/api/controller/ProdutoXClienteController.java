@@ -33,7 +33,6 @@ import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.repository.ProdutoXClienteRepository;
 
-
 @RestController
 @RequestMapping("/produtoxcliente")
 public class ProdutoXClienteController {
@@ -44,20 +43,24 @@ public class ProdutoXClienteController {
 	@Autowired
 	ClienteRepository clienteRepository;
 
-
 	@Autowired
 	ProdutoRepository produtoRepository;
-	
+
 	@Autowired
 	CategoriaProdutoRepository categoriaProdutoRepository;
 
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "produtoClienteRepository")
-	public Page<ProdutoXClienteDto> listar(
-			@PageableDefault(direction = Direction.ASC, sort = { "id" }) Pageable paginacao) {
+	public Page<ProdutoXClienteDto> listar(@PageableDefault(direction = Direction.ASC, sort = { "id" }) Long idCliente,
+			Pageable paginacao) {
 
-		return produtoClienteRepository.findAll(paginacao).map(ProdutoXClienteDto::new);
+		if (idCliente == null) {
+			return produtoClienteRepository.findAll(paginacao).map(ProdutoXClienteDto::new);
+		} else {
+			return produtoClienteRepository.findByIdCliente_Id(idCliente, paginacao).map(ProdutoXClienteDto::new);
+		}
+
 	}
 
 	@PostMapping
@@ -65,7 +68,8 @@ public class ProdutoXClienteController {
 	@CacheEvict(value = "produtoClienteRepository", allEntries = true)
 	public ResponseEntity<ProdutoXClienteDto> cadastrar(@RequestBody @Valid ProdutoXClienteForm form,
 			UriComponentsBuilder uriBuilder) {
-		ProdutoXCliente produtoCliente = form.formulario(clienteRepository, produtoRepository, categoriaProdutoRepository);
+		ProdutoXCliente produtoCliente = form.formulario(clienteRepository, produtoRepository,
+				categoriaProdutoRepository);
 
 		produtoClienteRepository.save(produtoCliente);
 
@@ -94,8 +98,8 @@ public class ProdutoXClienteController {
 			@RequestBody @Valid ProdutoXClienteForm form) {
 		Optional<ProdutoXCliente> optional = produtoClienteRepository.findById(id);
 		if (optional.isPresent()) {
-			ProdutoXCliente produto = form.atualizar(id, produtoClienteRepository, clienteRepository,
-					produtoRepository, categoriaProdutoRepository);
+			ProdutoXCliente produto = form.atualizar(id, produtoClienteRepository, clienteRepository, produtoRepository,
+					categoriaProdutoRepository);
 			return ResponseEntity.ok(new ProdutoXClienteDto(produto));
 		}
 

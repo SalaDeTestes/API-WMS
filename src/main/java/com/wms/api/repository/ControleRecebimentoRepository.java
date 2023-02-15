@@ -6,4 +6,6 @@ import com.wms.api.models.ControleRecebimento;
 
 public interface ControleRecebimentoRepository extends JpaRepository<ControleRecebimento, Long> {
 
+	ControleRecebimento findByNumeroCarga(String numeroCarga);
+
 }

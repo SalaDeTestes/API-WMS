@@ -119,7 +119,7 @@ public class Produto {
 	@Column(name = "fg_Status") // Produto ativo ou inativo
 	private Boolean situacao;
 
-	// 32 campos
+	private Integer diasCriterioRecebimento;
 
 	public Produto() {
 
@@ -132,7 +132,7 @@ public class Produto {
 			Float pesoEmbalagem, Integer lastroNormaPallet, Integer alturaNormaPallet, Float camadaNormaPallet,
 			Float alturaPallet, Float larguraPallet, Float comprimentoPallet, Float comprimentoCaixa, Float alturaCaixa,
 			Float larguraCaixa, Float quantidadeMinima, Boolean usaDataFabricacao, Boolean usaDataValidade,
-			Boolean situacao) {
+			Boolean situacao, Integer diasCriterioRecebimento) {
 
 		this.idUsuario = idUsuario;
 		this.idUnidadeMedida = idUnidadeMedida;
@@ -165,6 +165,7 @@ public class Produto {
 		this.usaDataFabricacao = usaDataFabricacao;
 		this.usaDataValidade = usaDataValidade;
 		this.situacao = situacao;
+		this.diasCriterioRecebimento = diasCriterioRecebimento;
 
 	}
 
@@ -422,6 +423,14 @@ public class Produto {
 
 	public void setSituacao(Boolean situacao) {
 		this.situacao = situacao;
+	}
+
+	public Integer getDiasCriterioRecebimento() {
+		return diasCriterioRecebimento;
+	}
+
+	public void setDiasCriterioRecebimento(Integer diasCriterioRecebimento) {
+		this.diasCriterioRecebimento = diasCriterioRecebimento;
 	}
 
 }

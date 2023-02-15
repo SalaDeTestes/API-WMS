@@ -6,6 +6,6 @@ import com.wms.api.models.ControleEntradaColetor;
 
 public interface ControleEntradaColetorRepository extends JpaRepository<ControleEntradaColetor, Long>{
 
-	ControleEntradaColetor findByNumeroCarga(String numeroCarga);
+	ControleEntradaColetor findByIdEtiqueta(long parseLong);
 
 }

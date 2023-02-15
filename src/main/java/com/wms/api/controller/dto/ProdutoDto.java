@@ -41,6 +41,7 @@ public class ProdutoDto {
 	private Boolean usaDataValidade;
 	private Boolean usaDataFabricacao;
 	private Boolean situacao;
+	private Integer diasCriterioRecebimento;
 
 	public ProdutoDto(Produto produto) {
 
@@ -76,6 +77,7 @@ public class ProdutoDto {
 		this.usaDataFabricacao = produto.getUsaDataFabricacao();
 		this.usaDataValidade = produto.getUsaDataValidade();
 		this.situacao = produto.getSituacao();
+		this.diasCriterioRecebimento = produto.getDiasCriterioRecebimento();
 	}
 
 	public Long getId() {
@@ -204,6 +206,10 @@ public class ProdutoDto {
 
 	public Boolean getSituacao() {
 		return situacao;
+	}
+
+	public Integer getDiasCriterioRecebimento() {
+		return diasCriterioRecebimento;
 	}
 
 }

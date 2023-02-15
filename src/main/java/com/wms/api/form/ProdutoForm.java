@@ -41,6 +41,7 @@ public class ProdutoForm {
 	private Boolean usaDataValidade;
 	private Boolean usaDataFabricacao;
 	private Boolean situacao;
+	private Integer diasCriterioRecebimento;
 
 	public Long getIdUsuario() {
 		return idUsuario;
@@ -290,6 +291,18 @@ public class ProdutoForm {
 		this.situacao = situacao;
 	}
 
+	public Integer getDiasCriterioRecebimento() {
+		return diasCriterioRecebimento;
+	}
+
+	public void setDiasCriterioRecebimento(Integer diasCriterioRecebimento) {
+		this.diasCriterioRecebimento = diasCriterioRecebimento;
+	}
+
+	public String getCodigoProduto() {
+		return codigoProduto;
+	}
+
 	public Produto formulario(UsuarioRepository usuarioRepository, UnidadeMedidaRepository medidaRepository,
 			CategoriaGalpaoRepository categoriaGalpaoRepository) {
 
@@ -325,6 +338,8 @@ public class ProdutoForm {
 		produto.setUsaDataFabricacao(usaDataFabricacao);
 		produto.setUsaDataValidade(usaDataValidade);
 		produto.setSituacao(situacao);
+		produto.setDiasCriterioRecebimento(diasCriterioRecebimento);
+		produto.setCodigoProduto(codigoProduto);
 
 		return produto;
 
@@ -365,6 +380,8 @@ public class ProdutoForm {
 		produto.setUsaDataFabricacao(usaDataFabricacao);
 		produto.setUsaDataValidade(usaDataValidade);
 		produto.setSituacao(situacao);
+		produto.setDiasCriterioRecebimento(diasCriterioRecebimento);
+		produto.setCodigoProduto(codigoProduto);
 
 		return produto;
 

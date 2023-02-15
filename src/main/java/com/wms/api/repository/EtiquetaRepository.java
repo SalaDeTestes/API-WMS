@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wms.api.models.Etiqueta;
 
-public interface EtiquetaRepository extends JpaRepository<Etiqueta, Long>{
+public interface EtiquetaRepository extends JpaRepository<Etiqueta, Long> {
 
 }

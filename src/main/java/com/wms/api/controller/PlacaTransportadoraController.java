@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,9 +43,9 @@ public class PlacaTransportadoraController {
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "placaRepository")
-	public Page<PlacaTransportadoraDto> lista(Pageable paginacao) {
+	public Page<PlacaTransportadoraDto> lista(@RequestParam Integer idTransportadora, Pageable paginacao) {
 
-		return placaRepository.findAll(paginacao).map(PlacaTransportadoraDto::new);
+		return placaRepository.findByIdTransportadora_Id(idTransportadora, paginacao).map(PlacaTransportadoraDto::new);
 	}
 
 	@PostMapping
