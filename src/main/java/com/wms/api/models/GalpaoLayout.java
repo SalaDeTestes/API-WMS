@@ -13,10 +13,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class GalpaoLayout {
 
-	
+	@Id
 	@GeneratedValue
 	private Long id;
-	@Id
+	
 	@Column(name = "fk_Id_Galpao")
 	private Long idGalpao;
 

@@ -1,39 +1,23 @@
 package com.wms.api.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.wms.api.models.ControleEntradaColetor;
+import com.wms.api.models.ControleEntradaProdutoEtiqueta;
 import com.wms.api.models.ControleEntradaProdutoPorPosicao;
 import com.wms.api.models.GalpaoLayout;
 import com.wms.api.repository.ControleEntradaColetorRepository;
+import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.GalpaoLayoutRepository;
 
 public class PosicionamentoService {
 
-
-
-	// Se o retorno for true significa que a posição ja esta sendo ocupada, false
-	// posição vazia
-	public boolean validaPosicao(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
-			ControleEntradaProdutoPorPosicao prodPosicao) {
-		Optional<ControleEntradaProdutoPorPosicao> prodPosicaoValida = prodPosicaoRepository
-				.findByIdGalpaoAndIdBlocoAndIdPosicaoAndIdNivel(prodPosicao.getIdGalpao(), prodPosicao.getIdBloco(),
-						prodPosicao.getIdPosicao(), prodPosicao.getIdNivel());
-
-		if (prodPosicaoValida.isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	// Se retorno for true significa que a posição existe, false posição não existe
-	public static boolean validaExistePosicao(GalpaoLayoutRepository galpaoLayoutRepository,
-			String etiquetaPosicionamento) {
-		// Substring Etiqueta
-		// 000 galpao 000 bloco 00 nivel 00 posição
-		etiquetaPosicionamento = "0010040101";
+	// False = ocupada/não existe/erro
+	// true = vazia/livre
+	public static boolean validaPosicao(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento) {
 
 		Long idGalpao = Long.parseLong(etiquetaPosicionamento.substring(1, 3));
 		Long idBloco = Long.parseLong(etiquetaPosicionamento.substring(3, 6));
@@ -45,50 +29,87 @@ public class PosicionamentoService {
 		System.out.println("idPosição " + idPosicao);
 		System.out.println("idNivel " + idNivel);
 
-		//OBS:O CAMPO ID DA TABELA NAO PODE FICAR VAZIO SENÃO ELE NÃO ACHA O REGISTRO!!!
-		
 		Optional<GalpaoLayout> galpaoLayoutValidado = galpaoLayoutRepository
 				.findByIdGalpaoAndIdBlocoAndIdPosicaoAndIdNivel(idGalpao, idBloco, idPosicao, idNivel);
-		if (galpaoLayoutValidado.isPresent()) {
-			System.out.println("existe");
-			return true;
-		}
-		System.out.println("Não existe");
 
-		return false;
+		Optional<ControleEntradaProdutoPorPosicao> prodPosicaoValida = prodPosicaoRepository
+				.findByIdGalpaoAndIdBlocoAndIdPosicaoAndIdNivel(idGalpao, idBloco, idPosicao, idNivel);
+
+		if (prodPosicaoValida.isPresent()) {
+			System.out.println("Ocupada");
+			return false;
+		} else if (galpaoLayoutValidado.isEmpty()) {
+			System.out.println("Não existe");
+			return false;
+		} else if (prodPosicaoValida.isEmpty() && galpaoLayoutValidado.isPresent()) {
+			System.out.println("vazia");
+			return true;
+		} else {
+			System.out.println("erro");
+			return false;
+		}
 	}
 
-	public void posicionaProduto(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
-			String EtiquetaProduto, ControleEntradaColetorRepository controleEntradaColetorRepository,
-			String etiquetaPosicionamento) {
+	// false = etiqueta ainda não posicionada
+	// true = etiqueta ja posicionada
+	public static Boolean validaEtiqueta(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+			String EtiquetaProduto, ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository) {
 
-
-		Long idGalpao = Long.parseLong(etiquetaPosicionamento.substring(1, 3));
-		Long idBloco = Long.parseLong(etiquetaPosicionamento.substring(3, 6));
-		Long idPosicao = Long.parseLong(etiquetaPosicionamento.substring(6, 8));
-		Long idNivel = Long.parseLong(etiquetaPosicionamento.substring(8, 10));
-
-		ControleEntradaColetor controleEntradaColetor = controleEntradaColetorRepository
+		List<ControleEntradaProdutoPorPosicao> produtoPosicao = prodPosicaoRepository
 				.findByIdEtiqueta(Long.parseLong(EtiquetaProduto));
 
-		// findByIdNotaFiscalAndIdProdutoAndLoteAndIdEtiqueta();
-		ControleEntradaProdutoPorPosicao prodPosicao = new ControleEntradaProdutoPorPosicao();
-		prodPosicao.setIdProduto(controleEntradaColetor.getIdProduto());
-		prodPosicao.setIdEtiqueta(controleEntradaColetor.getIdEtiqueta());
-		prodPosicao.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
-		prodPosicao.setQuantidade(controleEntradaColetor.getQuantidade());
-		prodPosicao.setIdStatusMovimentacao((long) 2);
-		prodPosicao.setQuatidadePallets(controleEntradaColetor.getNumeroPallet());
-		prodPosicao.setIdUsuario(controleEntradaColetor.getIdUsuario());
-		prodPosicao.setLote(controleEntradaColetor.getLote());
-		prodPosicao.setIdRua((long) 0);
-		prodPosicao.setNumeroSaidasEmAberto(0);
-		prodPosicao.setIdBloco(idBloco);
-		prodPosicao.setIdNivel(idNivel);
-		prodPosicao.setIdGalpao(idGalpao);
-		prodPosicao.setIdPosicao(idPosicao);
+		Optional<ControleEntradaProdutoEtiqueta> etiquetaEntrada = prodEtiquetaRepository
+				.findById(Long.parseLong(EtiquetaProduto));
 
-		prodPosicaoRepository.save(prodPosicao);
+		if (produtoPosicao.isEmpty() && etiquetaEntrada.isPresent()) {
+			System.out.println("não posicionada");
+			return true;
+		} else if (etiquetaEntrada.isEmpty()) {
+			System.out.println("Não existe nota para essa etiqueta");
+			return false;
+		} else {
+			System.out.println("ja posicionada");
+			return false;
+		}
+
+	}
+
+	public static void posicionaProduto(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+			String EtiquetaProduto, ControleEntradaColetorRepository controleEntradaColetorRepository,
+			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento,
+			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository) {
+
+		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
+				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
+
+			Long idGalpao = Long.parseLong(etiquetaPosicionamento.substring(1, 3));
+			Long idBloco = Long.parseLong(etiquetaPosicionamento.substring(3, 6));
+			Long idPosicao = Long.parseLong(etiquetaPosicionamento.substring(6, 8));
+			Long idNivel = Long.parseLong(etiquetaPosicionamento.substring(8, 10));
+
+			ControleEntradaColetor controleEntradaColetor = controleEntradaColetorRepository
+					.findByIdEtiqueta(Long.parseLong(EtiquetaProduto));
+
+			System.out.println("etiqueta: " + EtiquetaProduto);
+			ControleEntradaProdutoPorPosicao prodPosicao = new ControleEntradaProdutoPorPosicao();
+			prodPosicao.setIdProduto(controleEntradaColetor.getIdProduto());
+			prodPosicao.setIdEtiqueta(controleEntradaColetor.getIdEtiqueta());
+			prodPosicao.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
+			prodPosicao.setQuantidade(controleEntradaColetor.getQuantidade());
+			prodPosicao.setIdStatusMovimentacao((long) 2);
+			prodPosicao.setQuatidadePallets(controleEntradaColetor.getNumeroPallet());
+			prodPosicao.setIdUsuario(controleEntradaColetor.getIdUsuario());
+			prodPosicao.setLote(controleEntradaColetor.getLote());
+			prodPosicao.setIdRua((long) 0);
+			prodPosicao.setNumeroSaidasEmAberto(0);
+			prodPosicao.setIdBloco(idBloco);
+			prodPosicao.setIdNivel(idNivel);
+			prodPosicao.setIdGalpao(idGalpao);
+			prodPosicao.setIdPosicao(idPosicao);
+
+			prodPosicaoRepository.save(prodPosicao);
+
+		}
 
 	}
 }

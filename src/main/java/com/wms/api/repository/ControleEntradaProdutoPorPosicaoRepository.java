@@ -1,5 +1,6 @@
 package com.wms.api.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,10 @@ public interface ControleEntradaProdutoPorPosicaoRepository extends JpaRepositor
 
 	Optional<ControleEntradaProdutoPorPosicao> findByIdGalpaoAndIdBlocoAndIdPosicaoAndIdNivel(Long idGalpao,
 			Long idBloco, Long idPosicao, Long idNivel);
+	
+	ControleEntradaProdutoPorPosicao findByIdGalpaoAndIdBlocoAndIdNivelAndIdPosicao(Long idGalpao,
+			Long idBloco, Long idNivel, Long idPosicao);
+
+	List<ControleEntradaProdutoPorPosicao> findByIdEtiqueta(long parseLong);
 
 }
