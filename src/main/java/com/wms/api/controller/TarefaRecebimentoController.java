@@ -34,6 +34,7 @@ import com.wms.api.repository.DocaRepository;
 import com.wms.api.repository.EtiquetaRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
+import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.services.ControleRecebimentoService;
 
 @RestController
@@ -75,6 +76,12 @@ public class TarefaRecebimentoController {
 
 	@Autowired
 	private EtiquetaRepository etiquetaRepository;
+	
+	@Autowired
+	private NotaFiscalProdutoRepository nfProdutoRepository;
+	
+	@Autowired
+	private ProdutoRepository produtoRepository;
 
 	@GetMapping
 	@Transactional
@@ -105,7 +112,7 @@ public class TarefaRecebimentoController {
 				controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
 				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository,
-				nfprodutoRepository, docaRepository, etiquetaRepository);
+				nfprodutoRepository, docaRepository, etiquetaRepository, nfProdutoRepository, produtoRepository);
 
 		controleRecebimentoRepository.save(controleRecebimento);
 

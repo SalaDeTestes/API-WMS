@@ -1,5 +1,6 @@
 package com.wms.api.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import com.wms.api.models.ControleEntradaColetor;
 import com.wms.api.models.ControleEntradaProdutoEtiqueta;
 import com.wms.api.models.ControleEntradaProdutoPorPosicao;
 import com.wms.api.models.GalpaoLayout;
+import com.wms.api.models.TarefaPosicionamento;
 import com.wms.api.repository.ControleEntradaColetorRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
@@ -108,6 +110,29 @@ public class PosicionamentoService {
 			prodPosicao.setIdPosicao(idPosicao);
 
 			prodPosicaoRepository.save(prodPosicao);
+			
+			TarefaPosicionamento tarefa = new TarefaPosicionamento();
+			tarefa.setIdCliente(controleEntradaColetor.getIdNotaFiscal());
+			tarefa.setIdStatusTarefa((long)3);
+			tarefa.setIdTipoTarefa((long)2);
+			tarefa.setIdUsuario(controleEntradaColetor.getIdUsuario());
+			tarefa.setIdUsuarioMov(controleEntradaColetor.getIdUsuario());
+			tarefa.setIdEquipeExec((long) 1);
+			tarefa.setIdTipoEquipe((long) 1);
+			tarefa.setDataCriacao(LocalDateTime.now());
+			tarefa.setDataFim(LocalDateTime.now());
+			tarefa.setDataInicio(LocalDateTime.now());
+			tarefa.setNrSeqOrdemTarefa(1);
+			tarefa.setIdGalpaoOrigem(controleEntradaColetor.getIdDoca());
+			tarefa.setIdGalpaoDestino(idGalpao);
+			tarefa.setIdBlocoDestino(idBloco);
+			tarefa.setIdEtiqueta(Long.parseLong(EtiquetaProduto));
+			tarefa.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
+			tarefa.setIdProduto(controleEntradaColetor.getIdProduto());
+			tarefa.setLote(controleEntradaColetor.getLote());
+			
+			
+			
 
 		}
 
