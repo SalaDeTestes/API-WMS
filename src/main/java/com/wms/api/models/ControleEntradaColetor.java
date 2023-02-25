@@ -76,6 +76,9 @@ public class ControleEntradaColetor {
 	@Column(name = "fk_Id_Usuario")
 	private Long idUsuario;
 
+	@Column(name = "valorUnitario")
+	private Float valorUnitario;
+
 	@Column(name = "fg_Avaria")
 	private Boolean avaria = false;
 
@@ -95,7 +98,8 @@ public class ControleEntradaColetor {
 	public ControleEntradaColetor(Long revisao, Long idNotaFiscal, Long idProduto, String lote, Long idEtiqueta,
 			String descricaoEtiqueta, String numeroNota, String numeroCarga, Long idDoca, Float quantidade,
 			LocalDate dataValidade, LocalDateTime dataCadastro, LocalDate dataFabricacao, Long idTipoPallet, Float peso,
-			Integer numeroPallet, Long idUsuario, Boolean avaria, Boolean devolucao, Boolean repal, Boolean strech) {
+			Integer numeroPallet, Long idUsuario, Boolean avaria, Boolean devolucao, Boolean repal, Boolean strech,
+			Float valorUnitario) {
 
 		this.revisao = revisao;
 		this.idNotaFiscal = idNotaFiscal;
@@ -118,6 +122,7 @@ public class ControleEntradaColetor {
 		this.devolucao = devolucao;
 		this.repal = repal;
 		this.strech = strech;
+		this.valorUnitario = valorUnitario;
 	}
 
 	public Long getId() {
@@ -294,6 +299,14 @@ public class ControleEntradaColetor {
 
 	public void setStrech(Boolean strech) {
 		this.strech = strech;
+	}
+
+	public Float getValorUnitario() {
+		return valorUnitario;
+	}
+
+	public void setValorUnitario(Float valorUnitario) {
+		this.valorUnitario = valorUnitario;
 	}
 
 }

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.wms.api.controller.dto.NotaFiscalDto;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
+import com.wms.api.models.NotaFiscalProdutoHistorico;
+import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 
@@ -20,17 +22,36 @@ import com.wms.api.repository.NotaFiscalRepository;
 public class NotaFiscalService {
 
 	public void salvaItemNota(List<NotaFiscalProduto> notaproduto, NotaFiscal nf,
-			NotaFiscalProdutoRepository nfprodutoRepository) {
+			NotaFiscalProdutoRepository nfprodutoRepository,
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
 
 		for (NotaFiscalProduto nfproduto : notaproduto) {
 			nfproduto.setIdNotaFiscal(nf);
 			nfprodutoRepository.save(nfproduto);
+
+			NotaFiscalProdutoHistorico nfProdutoHistorico = new NotaFiscalProdutoHistorico();
+			nfProdutoHistorico.setIdNotaFiscal(nfproduto.getIdNotaFiscal().getId());
+			nfProdutoHistorico.setLote(nfproduto.getLote());
+			nfProdutoHistorico.setIdProduto(nfproduto.getIdProduto().getId());
+			nfProdutoHistorico.setPeso(nfproduto.getPesoUnitario());
+			nfProdutoHistorico.setEstoqueLiberado(nfproduto.getEstoqueLiberado());
+			nfProdutoHistorico.setEstoqueRetido(nfproduto.getEstoqueRetido());
+			nfProdutoHistorico.setQuantidadeEstoquePallet((int) (float) nfproduto.getQuantidadePalletsProdutoEstoque());
+			nfProdutoHistorico.setQuantidadePallet((int) (float) nfproduto.getQuantidadePalletsProduto());
+			nfProdutoHistorico.setQuantidadePalletConferido(nfproduto.getQuantidadePalletProdutoConferido());
+			nfProdutoHistorico.setQuantidadeProduto(nfproduto.getQuantidadeProduto());
+			nfProdutoHistorico.setQuantidadeProdutoConferida(nfproduto.getQuantidadeUnidadeConferida());
+			nfProdutoHistorico.setValorUnitario(nfproduto.getValorUnitario());
+
+			nfProdutoHistoricoRepository.save(nfProdutoHistorico);
+
 		}
 	}
 
-	public void ItensDaNota(NotaFiscal nf, NotaFiscalProdutoRepository nfprodutoRepository) {
+	public void ItensDaNota(NotaFiscal nf, NotaFiscalProdutoRepository nfprodutoRepository,
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
 
-		salvaItemNota(nf.getNotaFiscalProduto(), nf, nfprodutoRepository);
+		salvaItemNota(nf.getNotaFiscalProduto(), nf, nfprodutoRepository, nfProdutoHistoricoRepository);
 
 	}
 

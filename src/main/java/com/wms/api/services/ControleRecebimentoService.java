@@ -10,7 +10,11 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import com.wms.api.models.ControleConferencia;
 import com.wms.api.models.ControleEntradaColetor;
@@ -34,10 +38,13 @@ import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.ControleRecebimentoRepository;
 import com.wms.api.repository.DocaRepository;
 import com.wms.api.repository.EtiquetaRepository;
+import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
 
+@Service
+@Transactional
 public class ControleRecebimentoService {
 
 	@CacheEvict(value = "nfRepository", allEntries = true)
@@ -51,7 +58,8 @@ public class ControleRecebimentoService {
 			ControleConferenciaRepository controleConferenciaRepository,
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
 			NotaFiscalRepository nfRepository, DocaRepository docaRepository, EtiquetaRepository etiquetaRepository,
-			NotaFiscalProdutoRepository nfProdutoRepository, ProdutoRepository produtoRepository) {
+			NotaFiscalProdutoRepository nfProdutoRepository, ProdutoRepository produtoRepository,
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
 
 		for (ControleEntradaColetor listcontroleEntradaColetor : controleRecebimento.getControleEntradaColetor()) {
 //------------------------------------------------Validação de Etiqueta ------------------------------------------------------------------
@@ -138,6 +146,7 @@ public class ControleRecebimentoService {
 
 	}
 
+	@Async
 	public void atualizaNotaFiscalProduto(NotaFiscalProdutoRepository nfProdutoRepository, Long id,
 			ControleRecebimento recebimento, ProdutoRepository produtoRepository, NotaFiscalRepository nfRepository) {
 
@@ -173,6 +182,13 @@ public class ControleRecebimentoService {
 					entrada2.setIdNotaFiscal(nfRepository.getReferenceById(produto.getIdNotaFiscal()));
 					entrada2.setQuantidadePalletsProduto((float) produto.getNumeroPallet());
 					entrada2.setQuantidadePalletsProdutoEstoque((float) produto.getNumeroPallet());
+					entrada2.setPesoUnitario(produto.getPeso());
+					entrada2.setDataValidade(produto.getDataValidade());
+					entrada2.setDataFabricacao(produto.getDataFabricacao());
+					entrada2.setQuantidadePalletProdutoConferido((float) produto.getNumeroPallet());
+					entrada2.setQuantidadeUnidadeConferida(produto.getQuantidade());
+					entrada2.setValorUnitario(produto.getValorUnitario());
+
 					produtos2.add(entrada2);
 					nfProdutoRepository.save(entrada2);
 					quantidades.remove(chave);
@@ -238,13 +254,13 @@ public class ControleRecebimentoService {
 			ControleConferenciaRepository controleConferenciaRepository,
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
 			NotaFiscalRepository nfRepository, NotaFiscalProdutoRepository nfprodutoRepository,
-			DocaRepository docaRepository, EtiquetaRepository etiquetaRepository,
-			NotaFiscalProdutoRepository nfProdutoRepository, ProdutoRepository produtoRepository) {
+			DocaRepository docaRepository, EtiquetaRepository etiquetaRepository, ProdutoRepository produtoRepository,
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
 		salvarRecebimentoProdutoQuantidadeParcial(controleRecebimento, controleRecebimentoRepository,
 				entradaColetorRepository, controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
 				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository, docaRepository,
-				etiquetaRepository, nfProdutoRepository, produtoRepository);
+				etiquetaRepository, nfprodutoRepository, produtoRepository, nfProdutoHistoricoRepository);
 		salvarRecebimentoTotal(controleRecebimento, controleEntradaProdutoConferenciaRepository, nfRepository,
 				controleEntradaProdutoPorPosicaoRepository, nfprodutoRepository);
 	}

@@ -13,6 +13,8 @@ import com.wms.api.repository.ControleEntradaColetorRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.GalpaoLayoutRepository;
+import com.wms.api.repository.NotaFiscalRepository;
+import com.wms.api.repository.TarefaPosicionamentoRepository;
 
 public class PosicionamentoService {
 
@@ -79,7 +81,8 @@ public class PosicionamentoService {
 	public static void posicionaProduto(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
 			String EtiquetaProduto, ControleEntradaColetorRepository controleEntradaColetorRepository,
 			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento,
-			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository) {
+			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository, NotaFiscalRepository nfRepository,
+			TarefaPosicionamentoRepository tarefaPosicionamentoRepository) {
 
 		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
 				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
@@ -110,29 +113,57 @@ public class PosicionamentoService {
 			prodPosicao.setIdPosicao(idPosicao);
 
 			prodPosicaoRepository.save(prodPosicao);
-			
-			TarefaPosicionamento tarefa = new TarefaPosicionamento();
-			tarefa.setIdCliente(controleEntradaColetor.getIdNotaFiscal());
-			tarefa.setIdStatusTarefa((long)3);
-			tarefa.setIdTipoTarefa((long)2);
-			tarefa.setIdUsuario(controleEntradaColetor.getIdUsuario());
-			tarefa.setIdUsuarioMov(controleEntradaColetor.getIdUsuario());
-			tarefa.setIdEquipeExec((long) 1);
-			tarefa.setIdTipoEquipe((long) 1);
-			tarefa.setDataCriacao(LocalDateTime.now());
-			tarefa.setDataFim(LocalDateTime.now());
-			tarefa.setDataInicio(LocalDateTime.now());
-			tarefa.setNrSeqOrdemTarefa(1);
-			tarefa.setIdGalpaoOrigem(controleEntradaColetor.getIdDoca());
-			tarefa.setIdGalpaoDestino(idGalpao);
-			tarefa.setIdBlocoDestino(idBloco);
-			tarefa.setIdEtiqueta(Long.parseLong(EtiquetaProduto));
-			tarefa.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
-			tarefa.setIdProduto(controleEntradaColetor.getIdProduto());
-			tarefa.setLote(controleEntradaColetor.getLote());
-			
-			
-			
+
+			TarefaPosicionamento tarefaPai = new TarefaPosicionamento();
+			tarefaPai.setIdCliente(
+					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
+			tarefaPai.setIdStatusTarefa((long) 3);
+			tarefaPai.setIdTipoTarefa((long) 2);
+			tarefaPai.setIdUsuario(controleEntradaColetor.getIdUsuario());
+			tarefaPai.setIdUsuarioMov(controleEntradaColetor.getIdUsuario());
+			tarefaPai.setIdEquipeExec((long) 1);
+			tarefaPai.setIdTipoEquipe((long) 1);
+			tarefaPai.setDataCriacao(LocalDateTime.now());
+			tarefaPai.setDataFim(LocalDateTime.now());
+			tarefaPai.setDataInicio(LocalDateTime.now());
+			tarefaPai.setNrSeqOrdemTarefa(1);
+			tarefaPai.setIdGalpaoOrigem(controleEntradaColetor.getIdDoca());
+			tarefaPai.setIdGalpaoDestino(idGalpao);
+			tarefaPai.setIdBlocoDestino(idBloco);
+			tarefaPai.setIdEtiqueta(Long.parseLong(EtiquetaProduto));
+			tarefaPai.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
+			tarefaPai.setIdProduto(controleEntradaColetor.getIdProduto());
+			tarefaPai.setLote(controleEntradaColetor.getLote());
+
+			tarefaPosicionamentoRepository.save(tarefaPai);
+
+			TarefaPosicionamento tarefaFilho = new TarefaPosicionamento();
+			tarefaFilho.setIdCliente(
+					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
+			tarefaFilho.setIdStatusTarefa((long) 3);
+			tarefaFilho.setIdTipoTarefa((long) 2);
+			tarefaFilho.setIdUsuario(controleEntradaColetor.getIdUsuario());
+			tarefaFilho.setIdUsuarioMov(controleEntradaColetor.getIdUsuario());
+			tarefaFilho.setIdEquipeExec((long) 1);
+			tarefaFilho.setIdTipoEquipe((long) 2);
+			tarefaFilho.setDataCriacao(LocalDateTime.now());
+			tarefaFilho.setDataFim(LocalDateTime.now());
+			tarefaFilho.setDataInicio(LocalDateTime.now());
+			tarefaFilho.setNrSeqOrdemTarefa(2);
+			tarefaFilho.setNrSeqTarefaPai(tarefaPai.getId());
+			tarefaFilho.setIdGalpaoOrigem(idGalpao);
+			tarefaFilho.setIdGalpaoDestino(idGalpao);
+			tarefaFilho.setIdBlocoOrigem(idBloco);
+			tarefaFilho.setIdBlocoDestino(idBloco);
+			tarefaFilho.setIdEtiqueta(Long.parseLong(EtiquetaProduto));
+			tarefaFilho.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
+			tarefaFilho.setIdProduto(controleEntradaColetor.getIdProduto());
+			tarefaFilho.setLote(controleEntradaColetor.getLote());
+			tarefaFilho.setQtdProduto(controleEntradaColetor.getQuantidade());
+			tarefaFilho.setIdPosicaoDestino(idPosicao);
+			tarefaFilho.setIdNivelDestino(idNivel);
+
+			tarefaPosicionamentoRepository.save(tarefaFilho);
 
 		}
 

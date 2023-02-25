@@ -49,10 +49,10 @@ public class TarefaPosicionamento {
 	private LocalDateTime dataCriacao = LocalDateTime.now();
 
 	@Column(name = "Dt_Hora_Ini")
-	private LocalDateTime dataInicio;
+	private LocalDateTime dataInicio = LocalDateTime.now();
 
 	@Column(name = "Dt_Hora_Fim")
-	private LocalDateTime dataFim;
+	private LocalDateTime dataFim = LocalDateTime.now();
 
 	@Column(name = "Nr_Qt_Mercadoria")
 	private Float qtdProduto;

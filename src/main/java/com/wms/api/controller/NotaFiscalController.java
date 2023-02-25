@@ -33,6 +33,7 @@ import com.wms.api.form.NotaFiscalForm;
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.repository.ClienteRepository;
 import com.wms.api.repository.MotoristaRepository;
+import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.PlacaTransportadoraRepository;
@@ -81,6 +82,9 @@ public class NotaFiscalController {
 	@Autowired
 	FiltrosNFRepository filtrosRepository;
 
+	@Autowired
+	NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository;
+
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "nfRepository")
@@ -115,14 +119,14 @@ public class NotaFiscalController {
 
 	@PostMapping
 	@Transactional
-	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
+	@CacheEvict(value = { "nfRepository", "q" }, allEntries = true)
 	public ResponseEntity<NotaFiscalDto> cadastrar(@RequestBody @Valid NotaFiscalForm form, NotaFiscalService service,
 			UriComponentsBuilder uriBuilder) {
 		NotaFiscal nf = form.formulario(transportadoraRepository, usuarioRepository, statusRepository,
 				clienteRepository, placaRepository, motoristaRepository, tipoRepository, caminhaoRepository);
 
 		nfRepository.save(nf);
-		service.ItensDaNota(nf, nfProdutoRepository);
+		service.ItensDaNota(nf, nfProdutoRepository, nfProdutoHistoricoRepository);
 
 		URI uri = uriBuilder.path("/notafiscal/{id}").buildAndExpand(nf.getId()).toUri();
 
@@ -160,7 +164,7 @@ public class NotaFiscalController {
 
 	@PutMapping("/cancelar/{id}")
 	@Transactional
-	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
+	@CacheEvict(value = { "nfRepository", "q" }, allEntries = true)
 	public ResponseEntity<NotaFiscalDto> cancelar(@PathVariable Long id, @RequestBody @Valid NotaFiscalForm form) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {
@@ -173,7 +177,7 @@ public class NotaFiscalController {
 
 	@DeleteMapping("/{id}")
 	@Transactional
-	@CacheEvict(value = {"nfRepository", "q"}, allEntries = true)
+	@CacheEvict(value = { "nfRepository", "q" }, allEntries = true)
 	public ResponseEntity<?> remover(@PathVariable Long id) {
 		Optional<NotaFiscal> optional = nfRepository.findById(id);
 		if (optional.isPresent()) {

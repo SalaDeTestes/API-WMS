@@ -1,6 +1,7 @@
 package com.wms.api.controller;
 
 import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +34,7 @@ import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.ControleRecebimentoRepository;
 import com.wms.api.repository.DocaRepository;
 import com.wms.api.repository.EtiquetaRepository;
+import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
@@ -69,19 +72,19 @@ public class TarefaRecebimentoController {
 	private ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository;
 
 	@Autowired
-	private NotaFiscalProdutoRepository nfprodutoRepository;
-
-	@Autowired
 	private DocaRepository docaRepository;
 
 	@Autowired
 	private EtiquetaRepository etiquetaRepository;
-	
+
 	@Autowired
 	private NotaFiscalProdutoRepository nfProdutoRepository;
-	
+
 	@Autowired
 	private ProdutoRepository produtoRepository;
+
+	@Autowired
+	private NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository;
 
 	@GetMapping
 	@Transactional
@@ -104,20 +107,24 @@ public class TarefaRecebimentoController {
 	@PostMapping
 	@Transactional
 	@CacheEvict(value = "controleRecebimentoRepository", allEntries = true)
-	public ResponseEntity<ControleRecebimentoDto> cadastrar(@RequestBody @Valid ControleRecebimentoForm form,
-			ControleRecebimentoService service, UriComponentsBuilder uriBuilder) {
+	@Async
+	public CompletableFuture<ResponseEntity<ControleRecebimentoDto>> cadastrar(
+			@RequestBody @Valid ControleRecebimentoForm form, ControleRecebimentoService service,
+			UriComponentsBuilder uriBuilder) {
 
 		ControleRecebimento controleRecebimento = form.formulario();
 		service.salvarRecebimento(controleRecebimento, controleRecebimentoRepository, controleEntradaColetorRepository,
 				controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
 				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository,
-				nfprodutoRepository, docaRepository, etiquetaRepository, nfProdutoRepository, produtoRepository);
+				nfProdutoRepository, docaRepository, etiquetaRepository, produtoRepository,
+				nfProdutoHistoricoRepository);
 
 		controleRecebimentoRepository.save(controleRecebimento);
 
 		URI uri = uriBuilder.path("/tarefasrecebimento/{id}").buildAndExpand(controleRecebimento.getId()).toUri();
-		return ResponseEntity.created(uri).body(new ControleRecebimentoDto(controleRecebimento));
+		return CompletableFuture
+				.completedFuture(ResponseEntity.created(uri).body(new ControleRecebimentoDto(controleRecebimento)));
 
 	}
 

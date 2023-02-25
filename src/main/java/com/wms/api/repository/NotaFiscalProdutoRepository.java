@@ -11,8 +11,8 @@ public interface NotaFiscalProdutoRepository extends JpaRepository<NotaFiscalPro
 
 	List<NotaFiscalProduto> findByIdNotaFiscal(NotaFiscal idNotaFiscal);
 
-	NotaFiscalProduto findByIdNotaFiscal_idAndIdProduto_idAndLote(Long idNotaFiscal, Long idProduto, String lote);
-
 	List<NotaFiscalProduto> findByIdNotaFiscal_Id(Long id);
+
+	List<NotaFiscalProduto> findByIdNotaFiscalAndIdProduto(Long id, Long id2);
 
 }
