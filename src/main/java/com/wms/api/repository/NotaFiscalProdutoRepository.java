@@ -1,6 +1,7 @@
 package com.wms.api.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,5 +15,7 @@ public interface NotaFiscalProdutoRepository extends JpaRepository<NotaFiscalPro
 	List<NotaFiscalProduto> findByIdNotaFiscal_Id(Long id);
 
 	List<NotaFiscalProduto> findByIdNotaFiscalAndIdProduto(Long id, Long id2);
+
+	Optional<NotaFiscalProduto> findByIdNotaFiscal_IdAndIdProduto_IdAndLote(Long idNotaFiscal, Long idProduto, String lote);
 
 }

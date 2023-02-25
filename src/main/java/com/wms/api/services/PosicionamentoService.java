@@ -4,18 +4,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Service;
+
 import com.wms.api.models.ControleEntradaColetor;
 import com.wms.api.models.ControleEntradaProdutoEtiqueta;
 import com.wms.api.models.ControleEntradaProdutoPorPosicao;
 import com.wms.api.models.GalpaoLayout;
+import com.wms.api.models.NotaFiscalProduto;
 import com.wms.api.models.TarefaPosicionamento;
 import com.wms.api.repository.ControleEntradaColetorRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.GalpaoLayoutRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.TarefaPosicionamentoRepository;
 
+@Service
+@Transactional
 public class PosicionamentoService {
 
 	// False = ocupada/não existe/erro
@@ -78,11 +86,12 @@ public class PosicionamentoService {
 
 	}
 
-	public static void posicionaProduto(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+	public void posicionaProduto(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
 			String EtiquetaProduto, ControleEntradaColetorRepository controleEntradaColetorRepository,
 			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento,
 			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository, NotaFiscalRepository nfRepository,
-			TarefaPosicionamentoRepository tarefaPosicionamentoRepository) {
+			TarefaPosicionamentoRepository tarefaPosicionamentoRepository,
+			NotaFiscalProdutoRepository nfProdutoRepository) {
 
 		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
 				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
@@ -94,7 +103,8 @@ public class PosicionamentoService {
 
 			ControleEntradaColetor controleEntradaColetor = controleEntradaColetorRepository
 					.findByIdEtiqueta(Long.parseLong(EtiquetaProduto));
-
+			
+			//cria o registro do produto ja com sua posição na tabela tbControleEntradaMercadoriaPorPosição
 			System.out.println("etiqueta: " + EtiquetaProduto);
 			ControleEntradaProdutoPorPosicao prodPosicao = new ControleEntradaProdutoPorPosicao();
 			prodPosicao.setIdProduto(controleEntradaColetor.getIdProduto());
@@ -114,6 +124,7 @@ public class PosicionamentoService {
 
 			prodPosicaoRepository.save(prodPosicao);
 
+			//Cria Tarefa de Posicionamento Pai(Exclusivo do WMS HMS)
 			TarefaPosicionamento tarefaPai = new TarefaPosicionamento();
 			tarefaPai.setIdCliente(
 					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
@@ -137,6 +148,7 @@ public class PosicionamentoService {
 
 			tarefaPosicionamentoRepository.save(tarefaPai);
 
+			//Cria Tarefa de Posicionamento Filho(Exclusivo do WMS HMS)
 			TarefaPosicionamento tarefaFilho = new TarefaPosicionamento();
 			tarefaFilho.setIdCliente(
 					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
@@ -165,7 +177,29 @@ public class PosicionamentoService {
 
 			tarefaPosicionamentoRepository.save(tarefaFilho);
 
+			if (nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdTipoEntrada()
+					.getId() == 2) {
+				retencaoAutomatica(nfProdutoRepository, controleEntradaColetor);
+			}
+
 		}
 
 	}
+
+	//Metodo que faz a retenção Automatica
+	public void retencaoAutomatica(NotaFiscalProdutoRepository nfProdutoRepository,
+			ControleEntradaColetor controleEntradaColetor) {
+
+		Optional<NotaFiscalProduto> nfProduto = nfProdutoRepository.findByIdNotaFiscal_IdAndIdProduto_IdAndLote(
+				controleEntradaColetor.getIdNotaFiscal(), controleEntradaColetor.getIdProduto(),
+				controleEntradaColetor.getLote());
+
+		if (nfProduto.isPresent()) {
+			NotaFiscalProduto produtoNota = nfProduto.get();
+			produtoNota.setEstoqueRetido(produtoNota.getQuantidadeProduto());
+			nfProdutoRepository.save(produtoNota);
+		}
+
+	}
+
 }

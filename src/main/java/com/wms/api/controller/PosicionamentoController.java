@@ -21,6 +21,7 @@ import com.wms.api.repository.ControleEntradaColetorRepository;
 import com.wms.api.repository.ControleEntradaProdutoEtiquetaRepository;
 import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.GalpaoLayoutRepository;
+import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.TarefaPosicionamentoRepository;
 import com.wms.api.services.PosicionamentoService;
@@ -47,6 +48,9 @@ public class PosicionamentoController {
 	@Autowired
 	private NotaFiscalRepository nfRepository;
 
+	@Autowired
+	private NotaFiscalProdutoRepository nfProdutoRepository;
+
 	@GetMapping
 	@Transactional
 	public void teste() {
@@ -58,13 +62,12 @@ public class PosicionamentoController {
 	@Transactional
 	@CacheEvict(value = "clienteRepository", allEntries = true)
 	public ResponseEntity<ControleEntradaProdutoPorPosicao/* Dto */> cadastrar(
-			@RequestBody @Valid PosicionamentoForm form, UriComponentsBuilder uriBuilder) {
+			@RequestBody @Valid PosicionamentoForm form, PosicionamentoService service, UriComponentsBuilder uriBuilder) {
 		PosicionamentoForm posicionamentoform = form.formulario();
 
-		PosicionamentoService.posicionaProduto(prodPosicaoRepository, posicionamentoform.getEtiquetaProduto(),
-				controleEntradaColetorRepository, galpaoLayoutRepository,
-				posicionamentoform.getEtiquetaPosicionamento(), prodEtiquetaRepository, nfRepository,
-				tarefaPosicionamentoRepository);
+		
+		service.posicionaProduto(prodPosicaoRepository, posicionamentoform.getEtiquetaProduto(), controleEntradaColetorRepository, galpaoLayoutRepository, posicionamentoform.getEtiquetaPosicionamento(), prodEtiquetaRepository, nfRepository,
+				tarefaPosicionamentoRepository, nfProdutoRepository);
 
 		Long idGalpao = Long.parseLong(posicionamentoform.getEtiquetaPosicionamento().substring(1, 3));
 		Long idBloco = Long.parseLong(posicionamentoform.getEtiquetaPosicionamento().substring(3, 6));
