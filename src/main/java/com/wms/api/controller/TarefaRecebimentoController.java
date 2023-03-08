@@ -38,6 +38,7 @@ import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
+import com.wms.api.repository.StatusNFRepository;
 import com.wms.api.services.ControleRecebimentoService;
 
 @RestController
@@ -86,6 +87,9 @@ public class TarefaRecebimentoController {
 	@Autowired
 	private NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository;
 
+	@Autowired
+	private StatusNFRepository nfStatusRepository;
+
 	@GetMapping
 	@Transactional
 	@Cacheable(value = "nfRepository")
@@ -104,10 +108,10 @@ public class TarefaRecebimentoController {
 		return controleRecebimentoRepository.findAll(paginacao).map(ControleRecebimentoDto::new);
 	}
 
+	@Async
 	@PostMapping
 	@Transactional
 	@CacheEvict(value = "controleRecebimentoRepository", allEntries = true)
-	@Async
 	public CompletableFuture<ResponseEntity<ControleRecebimentoDto>> cadastrar(
 			@RequestBody @Valid ControleRecebimentoForm form, ControleRecebimentoService service,
 			UriComponentsBuilder uriBuilder) {
@@ -118,7 +122,7 @@ public class TarefaRecebimentoController {
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
 				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository,
 				nfProdutoRepository, docaRepository, etiquetaRepository, produtoRepository,
-				nfProdutoHistoricoRepository);
+				nfProdutoHistoricoRepository, nfStatusRepository);
 
 		controleRecebimentoRepository.save(controleRecebimento);
 

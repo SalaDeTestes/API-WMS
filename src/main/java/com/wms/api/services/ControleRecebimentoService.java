@@ -42,12 +42,13 @@ import com.wms.api.repository.NotaFiscalProdutoHistoricoRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
+import com.wms.api.repository.StatusNFRepository;
 
 @Service
 @Transactional
 public class ControleRecebimentoService {
 
-	@CacheEvict(value = "nfRepository", allEntries = true)
+	@CacheEvict(value = { "nfRepository", "controleRecebimentoRepository" }, allEntries = true)
 	public void salvarRecebimentoProdutoQuantidadeParcial(ControleRecebimento controleRecebimento,
 			ControleRecebimentoRepository controleRecebimentoRepository,
 			ControleEntradaColetorRepository entradaColetorRepository,
@@ -59,7 +60,7 @@ public class ControleRecebimentoService {
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
 			NotaFiscalRepository nfRepository, DocaRepository docaRepository, EtiquetaRepository etiquetaRepository,
 			NotaFiscalProdutoRepository nfProdutoRepository, ProdutoRepository produtoRepository,
-			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository, StatusNFRepository nfStatusRepository) {
 
 		for (ControleEntradaColetor listcontroleEntradaColetor : controleRecebimento.getControleEntradaColetor()) {
 //------------------------------------------------Validação de Etiqueta ------------------------------------------------------------------
@@ -103,6 +104,7 @@ public class ControleRecebimentoService {
 
 		NotaFiscal nf = nfRepository.findByNumeroCarga(controleRecebimento.getNumeroCarga());
 		nf.setEntradaValidada(true);
+		nf.setIdStatusNF(nfStatusRepository.getReferenceById((long) 2));
 
 		ControleConferencia controleConferencia = new ControleConferencia();
 		controleConferencia.setIdDoca(controleRecebimento.getIdDoca());
@@ -116,7 +118,7 @@ public class ControleRecebimentoService {
 
 	}
 
-	@CacheEvict(value = "nfRepository", allEntries = true)
+	@CacheEvict(value = { "nfRepository", "controleRecebimentoRepository" }, allEntries = true)
 	public void salvarRecebimentoTotal(ControleRecebimento controleRecebimento,
 			ControleEntradaProdutoConferenciaRepository controleEntradaProdutoConferenciaRepository,
 			NotaFiscalRepository nfRepository,
@@ -147,6 +149,7 @@ public class ControleRecebimentoService {
 	}
 
 	@Async
+	@CacheEvict(value = { "nfProdutoRepository", "controleRecebimentoRepository" }, allEntries = true)
 	public void atualizaNotaFiscalProduto(NotaFiscalProdutoRepository nfProdutoRepository, Long id,
 			ControleRecebimento recebimento, ProdutoRepository produtoRepository, NotaFiscalRepository nfRepository) {
 
@@ -219,6 +222,7 @@ public class ControleRecebimentoService {
 		}
 	}
 
+	@CacheEvict(value = { "nfProdutoRepository", "controleRecebimentoRepository" }, allEntries = true)
 	public void deletar(Long id, NotaFiscalProdutoRepository nfprodutoRepository) {
 		List<NotaFiscalProduto> itens = nfprodutoRepository.findByIdNotaFiscal_Id(id);
 
@@ -244,6 +248,7 @@ public class ControleRecebimentoService {
 
 	}
 
+	@CacheEvict(value = { "nfRepository", "controleRecebimentoRepository" }, allEntries = true)
 	public void salvarRecebimento(ControleRecebimento controleRecebimento,
 			ControleRecebimentoRepository controleRecebimentoRepository,
 			ControleEntradaColetorRepository entradaColetorRepository,
@@ -255,12 +260,13 @@ public class ControleRecebimentoService {
 			ControleEntradaColetorStatusRepository controleEntradaColetorStatusRepository,
 			NotaFiscalRepository nfRepository, NotaFiscalProdutoRepository nfprodutoRepository,
 			DocaRepository docaRepository, EtiquetaRepository etiquetaRepository, ProdutoRepository produtoRepository,
-			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository) {
+			NotaFiscalProdutoHistoricoRepository nfProdutoHistoricoRepository, StatusNFRepository nfStatusRepository) {
 		salvarRecebimentoProdutoQuantidadeParcial(controleRecebimento, controleRecebimentoRepository,
 				entradaColetorRepository, controleEntradaProdutoPorPosicaoRepository, controleEntradaEtiquetaRepository,
 				controleEntradaProdutoConferenciaRepository, controleEntradaProdutoEtiquetaRepository,
 				controleConferenciaRepository, controleEntradaColetorStatusRepository, nfRepository, docaRepository,
-				etiquetaRepository, nfprodutoRepository, produtoRepository, nfProdutoHistoricoRepository);
+				etiquetaRepository, nfprodutoRepository, produtoRepository, nfProdutoHistoricoRepository,
+				nfStatusRepository);
 		salvarRecebimentoTotal(controleRecebimento, controleEntradaProdutoConferenciaRepository, nfRepository,
 				controleEntradaProdutoPorPosicaoRepository, nfprodutoRepository);
 	}

@@ -26,9 +26,8 @@ import com.wms.api.repository.TarefaPosicionamentoRepository;
 @Transactional
 public class PosicionamentoService {
 
-	// False = ocupada/não existe/erro
 	// true = vazia/livre
-	public static boolean validaPosicao(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+	public boolean validaPosicao(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
 			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento) {
 
 		Long idGalpao = Long.parseLong(etiquetaPosicionamento.substring(1, 3));
@@ -49,22 +48,21 @@ public class PosicionamentoService {
 
 		if (prodPosicaoValida.isPresent()) {
 			System.out.println("Ocupada");
-			return false;
+			throw new RuntimeException("A posição: " + idGalpao + idBloco + idPosicao + idNivel + " esta ocupada");
 		} else if (galpaoLayoutValidado.isEmpty()) {
 			System.out.println("Não existe");
-			return false;
+			throw new RuntimeException("A posição: " + idGalpao + idBloco + idPosicao + idNivel + " não existe");
 		} else if (prodPosicaoValida.isEmpty() && galpaoLayoutValidado.isPresent()) {
 			System.out.println("vazia");
 			return true;
 		} else {
 			System.out.println("erro");
-			return false;
+			throw new RuntimeException("Erro não identificado");
 		}
 	}
 
-	// false = etiqueta ainda não posicionada
 	// true = etiqueta ja posicionada
-	public static Boolean validaEtiqueta(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
+	public Boolean validaEtiqueta(ControleEntradaProdutoPorPosicaoRepository prodPosicaoRepository,
 			String EtiquetaProduto, ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository) {
 
 		List<ControleEntradaProdutoPorPosicao> produtoPosicao = prodPosicaoRepository
@@ -78,10 +76,12 @@ public class PosicionamentoService {
 			return true;
 		} else if (etiquetaEntrada.isEmpty()) {
 			System.out.println("Não existe nota para essa etiqueta");
-			return false;
+			throw new RuntimeException("Não existe nota para a etiqueta " + EtiquetaProduto);
+
 		} else {
 			System.out.println("ja posicionada");
-			return false;
+			throw new RuntimeException("A etiqueta " + EtiquetaProduto + " ja esta posicionada!");
+
 		}
 
 	}
@@ -91,7 +91,8 @@ public class PosicionamentoService {
 			GalpaoLayoutRepository galpaoLayoutRepository, String etiquetaPosicionamento,
 			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository, NotaFiscalRepository nfRepository,
 			TarefaPosicionamentoRepository tarefaPosicionamentoRepository,
-			NotaFiscalProdutoRepository nfProdutoRepository) {
+			NotaFiscalProdutoRepository nfProdutoRepository,
+			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository) {
 
 		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
 				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
@@ -103,8 +104,9 @@ public class PosicionamentoService {
 
 			ControleEntradaColetor controleEntradaColetor = controleEntradaColetorRepository
 					.findByIdEtiqueta(Long.parseLong(EtiquetaProduto));
-			
-			//cria o registro do produto ja com sua posição na tabela tbControleEntradaMercadoriaPorPosição
+
+			// cria o registro do produto ja com sua posição na tabela
+			// tbControleEntradaMercadoriaPorPosição
 			System.out.println("etiqueta: " + EtiquetaProduto);
 			ControleEntradaProdutoPorPosicao prodPosicao = new ControleEntradaProdutoPorPosicao();
 			prodPosicao.setIdProduto(controleEntradaColetor.getIdProduto());
@@ -124,7 +126,7 @@ public class PosicionamentoService {
 
 			prodPosicaoRepository.save(prodPosicao);
 
-			//Cria Tarefa de Posicionamento Pai(Exclusivo do WMS HMS)
+			// Cria Tarefa de Posicionamento Pai(Exclusivo do WMS HMS)
 			TarefaPosicionamento tarefaPai = new TarefaPosicionamento();
 			tarefaPai.setIdCliente(
 					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
@@ -148,7 +150,7 @@ public class PosicionamentoService {
 
 			tarefaPosicionamentoRepository.save(tarefaPai);
 
-			//Cria Tarefa de Posicionamento Filho(Exclusivo do WMS HMS)
+			// Cria Tarefa de Posicionamento Filho(Exclusivo do WMS HMS)
 			TarefaPosicionamento tarefaFilho = new TarefaPosicionamento();
 			tarefaFilho.setIdCliente(
 					nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdCliente().getId());
@@ -179,16 +181,46 @@ public class PosicionamentoService {
 
 			if (nfRepository.getReferenceById(controleEntradaColetor.getIdNotaFiscal()).getIdTipoEntrada()
 					.getId() == 2) {
-				retencaoAutomatica(nfProdutoRepository, controleEntradaColetor);
+				retencaoAutomatica(nfProdutoRepository, controleEntradaColetor, nfProdutoPorPosicaoRepository);
+			} else {
+				liberacaoAutomatica(nfProdutoRepository, controleEntradaColetor, nfProdutoPorPosicaoRepository);
 			}
 
 		}
 
 	}
 
-	//Metodo que faz a retenção Automatica
+	// Metodo que faz a retenção Automatica
 	public void retencaoAutomatica(NotaFiscalProdutoRepository nfProdutoRepository,
-			ControleEntradaColetor controleEntradaColetor) {
+			ControleEntradaColetor controleEntradaColetor,
+			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository) {
+
+		Optional<NotaFiscalProduto> nfProduto = nfProdutoRepository.findByIdNotaFiscal_IdAndIdProduto_IdAndLote(
+				controleEntradaColetor.getIdNotaFiscal(), controleEntradaColetor.getIdProduto(),
+				controleEntradaColetor.getLote());
+
+		Optional<ControleEntradaProdutoPorPosicao> nfProdutoPorPosicao = nfProdutoPorPosicaoRepository
+				.findByIdNotaFiscalAndIdProdutoAndLote(controleEntradaColetor.getIdNotaFiscal(),
+						controleEntradaColetor.getIdProduto(), controleEntradaColetor.getLote());
+
+		if (nfProdutoPorPosicao.isPresent()) {
+			ControleEntradaProdutoPorPosicao nfProdutoPosicao = nfProdutoPorPosicao.get();
+			nfProdutoPosicao.setIdMotivoRetido((long) 2);
+			nfProdutoPorPosicaoRepository.save(nfProdutoPosicao);
+		}
+
+		if (nfProduto.isPresent()) {
+			NotaFiscalProduto produtoNota = nfProduto.get();
+			produtoNota.setEstoqueRetido(produtoNota.getQuantidadeProduto());
+			nfProdutoRepository.save(produtoNota);
+		}
+
+	}
+
+	// Metodo que faz a liberação Automatica
+	public void liberacaoAutomatica(NotaFiscalProdutoRepository nfProdutoRepository,
+			ControleEntradaColetor controleEntradaColetor,
+			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository) {
 
 		Optional<NotaFiscalProduto> nfProduto = nfProdutoRepository.findByIdNotaFiscal_IdAndIdProduto_IdAndLote(
 				controleEntradaColetor.getIdNotaFiscal(), controleEntradaColetor.getIdProduto(),
@@ -196,7 +228,7 @@ public class PosicionamentoService {
 
 		if (nfProduto.isPresent()) {
 			NotaFiscalProduto produtoNota = nfProduto.get();
-			produtoNota.setEstoqueRetido(produtoNota.getQuantidadeProduto());
+			produtoNota.setEstoqueLiberado(produtoNota.getQuantidadeProduto());
 			nfProdutoRepository.save(produtoNota);
 		}
 
