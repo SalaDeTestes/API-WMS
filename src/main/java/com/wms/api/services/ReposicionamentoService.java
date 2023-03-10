@@ -184,7 +184,7 @@ public class ReposicionamentoService {
 
 			tarefa.setIdEtiqueta(Long.parseLong(EtiquetaProduto));
 			tarefa.setIdNotaFiscal(nfProdutoPorPosicao.get().getIdNotaFiscal());
-			tarefa.setIdProduto(nfProdutoPorPosicao.get().getIdProduto());
+			tarefa.setIdProduto(nfProdutoPorPosicao.get().getIdProduto().getId());
 			tarefa.setLote(nfProdutoPorPosicao.get().getLote());
 
 			tarefaPosicionamentoRepository.save(tarefa);

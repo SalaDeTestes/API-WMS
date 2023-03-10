@@ -123,7 +123,7 @@ public class ControleRecebimentoService {
 			ControleEntradaProdutoConferenciaRepository controleEntradaProdutoConferenciaRepository,
 			NotaFiscalRepository nfRepository,
 			ControleEntradaProdutoPorPosicaoRepository controleEntradaProdutoPorPosicaoRepository,
-			NotaFiscalProdutoRepository nfprodutoRepository) {
+			NotaFiscalProdutoRepository nfprodutoRepository, ProdutoRepository produtoRepository) {
 
 		for (ControleEntradaProdutoConferencia listControleEntradaProdutoConferencia : controleRecebimento
 				.getControleEntradaProdutoConferencia()) {
@@ -132,7 +132,8 @@ public class ControleRecebimentoService {
 
 			ControleEntradaProdutoPorPosicao controleEntradaProdutoPorPosicao = new ControleEntradaProdutoPorPosicao();
 			controleEntradaProdutoPorPosicao.setIdNotaFiscal(listControleEntradaProdutoConferencia.getIdNotaFiscal());
-			controleEntradaProdutoPorPosicao.setIdProduto(listControleEntradaProdutoConferencia.getIdProduto());
+			controleEntradaProdutoPorPosicao.setIdProduto(
+					produtoRepository.getReferenceById(listControleEntradaProdutoConferencia.getIdProduto()));
 			controleEntradaProdutoPorPosicao.setLote(listControleEntradaProdutoConferencia.getLote());
 			controleEntradaProdutoPorPosicao.setIdGalpao(nfRepository
 					.getReferenceById(listControleEntradaProdutoConferencia.getIdNotaFiscal()).getIdDoca().getId());
@@ -268,7 +269,7 @@ public class ControleRecebimentoService {
 				etiquetaRepository, nfprodutoRepository, produtoRepository, nfProdutoHistoricoRepository,
 				nfStatusRepository);
 		salvarRecebimentoTotal(controleRecebimento, controleEntradaProdutoConferenciaRepository, nfRepository,
-				controleEntradaProdutoPorPosicaoRepository, nfprodutoRepository);
+				controleEntradaProdutoPorPosicaoRepository, nfprodutoRepository, produtoRepository);
 	}
 
 }

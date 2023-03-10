@@ -2,6 +2,7 @@ package com.wms.api.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,12 +20,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class NotaFiscalProduto {
 
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	@Column(name = "id", unique = true)
 	private Long id;
 
 	@ManyToOne
-    @JsonIgnore
+	@JsonIgnore
 	@JoinColumn(name = "fk_Id_ControleEntrada")
 	private NotaFiscal idNotaFiscal;
 
@@ -79,7 +81,7 @@ public class NotaFiscalProduto {
 			Float estoqueLiberado, Float estoqueRetido, Float quantidadePalletsProduto,
 			Float quantidadePalletsProdutoEstoque, Float valorUnitario, Float pesoUnitario, LocalDate dataFabricacao,
 			LocalDate dataValidade, Float quantidadeUnidadeConferida, Float quantidadePalletProdutoConferido,
-			LocalDateTime dataCadastro) {
+			LocalDateTime dataCadastro, List<ControleEntradaProdutoPorPosicao> prodPosicao) {
 
 		this.idNotaFiscal = idNotaFiscal;
 		this.idProduto = idProduto;
@@ -98,7 +100,7 @@ public class NotaFiscalProduto {
 		this.quantidadePalletProdutoConferido = quantidadePalletProdutoConferido;
 
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -111,7 +113,7 @@ public class NotaFiscalProduto {
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
-			}
+		}
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())

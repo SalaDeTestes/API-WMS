@@ -20,6 +20,7 @@ import com.wms.api.repository.ControleEntradaProdutoPorPosicaoRepository;
 import com.wms.api.repository.GalpaoLayoutRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
+import com.wms.api.repository.ProdutoRepository;
 import com.wms.api.repository.TarefaPosicionamentoRepository;
 
 @Service
@@ -92,7 +93,8 @@ public class PosicionamentoService {
 			ControleEntradaProdutoEtiquetaRepository prodEtiquetaRepository, NotaFiscalRepository nfRepository,
 			TarefaPosicionamentoRepository tarefaPosicionamentoRepository,
 			NotaFiscalProdutoRepository nfProdutoRepository,
-			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository) {
+			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository,
+			ProdutoRepository produtoRepository) {
 
 		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
 				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
@@ -109,7 +111,7 @@ public class PosicionamentoService {
 			// tbControleEntradaMercadoriaPorPosição
 			System.out.println("etiqueta: " + EtiquetaProduto);
 			ControleEntradaProdutoPorPosicao prodPosicao = new ControleEntradaProdutoPorPosicao();
-			prodPosicao.setIdProduto(controleEntradaColetor.getIdProduto());
+			prodPosicao.setIdProduto(produtoRepository.getReferenceById(controleEntradaColetor.getIdProduto()));
 			prodPosicao.setIdEtiqueta(controleEntradaColetor.getIdEtiqueta());
 			prodPosicao.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
 			prodPosicao.setQuantidade(controleEntradaColetor.getQuantidade());
