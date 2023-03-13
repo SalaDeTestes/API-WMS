@@ -21,7 +21,7 @@ public class LiberarReterDto {
 	private Long idBloco;
 	private Long idNivel;
 	private Long idPosicao;
-	private Long idStatusMovimentacao;
+	private String Status;
 	private String codigoProduto;
 	private String descricaoProduto;
 
@@ -40,10 +40,16 @@ public class LiberarReterDto {
 		this.idBloco = porPosicao.getIdBloco();
 		this.idNivel = porPosicao.getIdNivel();
 		this.idPosicao = porPosicao.getIdPosicao();
-		this.idStatusMovimentacao = porPosicao.getIdStatusMovimentacao();
 		this.codigoProduto = porPosicao.getIdProduto().getCodigoFabricante();
 		this.descricaoProduto = porPosicao.getIdProduto().getDescricao();
-
+		
+		if (nfProduto.getEstoqueLiberado() == null || nfProduto.getEstoqueLiberado() == 0
+				|| nfProduto.getEstoqueLiberado() < 0) {
+			this.Status = "Retido";
+		} else if (nfProduto.getEstoqueRetido() == null || nfProduto.getEstoqueRetido() == 0
+				|| nfProduto.getEstoqueRetido() < 0) {
+			this.Status = "Liberado";
+		}
 	}
 
 	public Long getIdNotaFiscalProduto() {
@@ -158,12 +164,12 @@ public class LiberarReterDto {
 		this.idPosicao = idPosicao;
 	}
 
-	public Long getIdStatusMovimentacao() {
-		return idStatusMovimentacao;
+	public String getStatus() {
+		return Status;
 	}
 
-	public void setIdStatusMovimentacao(Long idStatusMovimentacao) {
-		this.idStatusMovimentacao = idStatusMovimentacao;
+	public void setStatus(String Status) {
+		this.Status = Status;
 	}
 
 	public String getCodigoProduto() {

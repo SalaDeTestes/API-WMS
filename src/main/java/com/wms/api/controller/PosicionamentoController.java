@@ -24,6 +24,7 @@ import com.wms.api.repository.GalpaoLayoutRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
+import com.wms.api.repository.StatusMovimentacaoRepository;
 import com.wms.api.repository.TarefaPosicionamentoRepository;
 import com.wms.api.services.PosicionamentoService;
 
@@ -58,6 +59,9 @@ public class PosicionamentoController {
 	@Autowired
 	private ProdutoRepository ProdutoRepository;
 
+	@Autowired
+	private StatusMovimentacaoRepository statusMovimentacaoRepository;
+
 	@GetMapping
 	@Transactional
 	public void teste() {
@@ -76,7 +80,8 @@ public class PosicionamentoController {
 		service.posicionaProduto(prodPosicaoRepository, posicionamentoform.getEtiquetaProduto(),
 				controleEntradaColetorRepository, galpaoLayoutRepository,
 				posicionamentoform.getEtiquetaPosicionamento(), prodEtiquetaRepository, nfRepository,
-				tarefaPosicionamentoRepository, nfProdutoRepository, nfProdutoPorPosicaoRepository, ProdutoRepository);
+				tarefaPosicionamentoRepository, nfProdutoRepository, nfProdutoPorPosicaoRepository, ProdutoRepository,
+				statusMovimentacaoRepository);
 
 		Long idGalpao = Long.parseLong(posicionamentoform.getEtiquetaPosicionamento().substring(1, 3));
 		Long idBloco = Long.parseLong(posicionamentoform.getEtiquetaPosicionamento().substring(3, 6));

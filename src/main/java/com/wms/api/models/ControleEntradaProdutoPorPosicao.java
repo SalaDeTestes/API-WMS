@@ -58,8 +58,9 @@ public class ControleEntradaProdutoPorPosicao {
 	@Column(name = "fk_MotivoRetido")
 	private Long idMotivoRetido;
 
-	@Column(name = "fk_Id_StatusMov")
-	private Long idStatusMovimentacao;
+	@ManyToOne
+	@JoinColumn(name = "fk_Id_StatusMov")
+	private StatusMovimentacao idStatusMovimentacao;
 
 	@Column(name = "fk_Id_Usuario")
 	private Long idUsuario;
@@ -76,7 +77,7 @@ public class ControleEntradaProdutoPorPosicao {
 
 	public ControleEntradaProdutoPorPosicao(Long idNotaFiscal, Produto idProduto, String lote, Long idGalpao,
 			Long idBloco, Long idPosicao, Long idNivel, Long idRua, Float quantidade, Integer quatidadePallets,
-			Long idEtiqueta, Long idMotivoRetido, Long idStatusMovimentacao, Long idUsuario,
+			Long idEtiqueta, Long idMotivoRetido, StatusMovimentacao idStatusMovimentacao, Long idUsuario,
 			Integer numeroSaidasEmAberto, Boolean reserva) {
 
 		this.idNotaFiscal = idNotaFiscal;
@@ -201,11 +202,11 @@ public class ControleEntradaProdutoPorPosicao {
 		this.idMotivoRetido = idMotivoRetido;
 	}
 
-	public Long getIdStatusMovimentacao() {
+	public StatusMovimentacao getIdStatusMovimentacao() {
 		return idStatusMovimentacao;
 	}
 
-	public void setIdStatusMovimentacao(Long idStatusMovimentacao) {
+	public void setIdStatusMovimentacao(StatusMovimentacao idStatusMovimentacao) {
 		this.idStatusMovimentacao = idStatusMovimentacao;
 	}
 

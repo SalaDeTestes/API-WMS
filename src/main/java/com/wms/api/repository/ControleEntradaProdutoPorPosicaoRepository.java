@@ -28,4 +28,7 @@ public interface ControleEntradaProdutoPorPosicaoRepository
 	List<ControleEntradaProdutoPorPosicao> findByLoteAndIdProdutoAndIdNotaFiscal(String lote, Produto produto,
 			Long notaFiscal);
 
+	List<ControleEntradaProdutoPorPosicao> findByLoteAndIdProdutoAndIdNotaFiscalAndIdEtiquetaIsNotNull(String lote,
+			Produto idProduto, Long id);
+
 }

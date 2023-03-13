@@ -21,6 +21,7 @@ import com.wms.api.repository.GalpaoLayoutRepository;
 import com.wms.api.repository.NotaFiscalProdutoRepository;
 import com.wms.api.repository.NotaFiscalRepository;
 import com.wms.api.repository.ProdutoRepository;
+import com.wms.api.repository.StatusMovimentacaoRepository;
 import com.wms.api.repository.TarefaPosicionamentoRepository;
 
 @Service
@@ -94,7 +95,7 @@ public class PosicionamentoService {
 			TarefaPosicionamentoRepository tarefaPosicionamentoRepository,
 			NotaFiscalProdutoRepository nfProdutoRepository,
 			ControleEntradaProdutoPorPosicaoRepository nfProdutoPorPosicaoRepository,
-			ProdutoRepository produtoRepository) {
+			ProdutoRepository produtoRepository, StatusMovimentacaoRepository statusMovimentacaoRepository) {
 
 		if (validaPosicao(prodPosicaoRepository, galpaoLayoutRepository, etiquetaPosicionamento) == true
 				&& validaEtiqueta(prodPosicaoRepository, EtiquetaProduto, prodEtiquetaRepository) == true) {
@@ -115,7 +116,7 @@ public class PosicionamentoService {
 			prodPosicao.setIdEtiqueta(controleEntradaColetor.getIdEtiqueta());
 			prodPosicao.setIdNotaFiscal(controleEntradaColetor.getIdNotaFiscal());
 			prodPosicao.setQuantidade(controleEntradaColetor.getQuantidade());
-			prodPosicao.setIdStatusMovimentacao((long) 2);
+			prodPosicao.setIdStatusMovimentacao(statusMovimentacaoRepository.getReferenceById((long) 2));
 			prodPosicao.setQuatidadePallets(controleEntradaColetor.getNumeroPallet());
 			prodPosicao.setIdUsuario(controleEntradaColetor.getIdUsuario());
 			prodPosicao.setLote(controleEntradaColetor.getLote());

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wms.api.models.NotaFiscal;
 import com.wms.api.models.NotaFiscalProduto;
+import com.wms.api.models.Produto;
+
 
 public interface NotaFiscalProdutoRepository extends JpaRepository<NotaFiscalProduto, Long> {
 
@@ -18,5 +20,7 @@ public interface NotaFiscalProdutoRepository extends JpaRepository<NotaFiscalPro
 
 	Optional<NotaFiscalProduto> findByIdNotaFiscal_IdAndIdProduto_IdAndLote(Long idNotaFiscal, Long idProduto,
 			String lote);
+
+	NotaFiscalProduto findByIdNotaFiscalAndIdProdutoAndLote(NotaFiscal notaFiscal, Produto produto, String lote);
 
 }
